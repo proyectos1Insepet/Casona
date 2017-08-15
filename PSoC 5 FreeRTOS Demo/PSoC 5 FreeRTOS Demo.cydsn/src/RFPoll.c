@@ -392,6 +392,7 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                             RF_Connection_PutChar(buffer_A[x]);
                         }                       
                         bufferAready = 0;
+                        DeliveryStateA = 0;
                           
                     }
                     
@@ -456,6 +457,7 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                         }
                      
                         bufferAreadyB = 0;
+                        DeliveryStateB = 0;
                     }
                     
                     // Authorization Request
@@ -511,6 +513,7 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                             RF_Connection_PutChar(buffer_C[x]);
                         }                       
                         bufferAreadyC = 0;
+                        DeliveryStateC = 0;
                     }
                     
                     // Authorization Request
@@ -576,6 +579,7 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                             RF_Connection_PutChar(buffer_D[x]);
                         }                       
                         bufferAreadyD = 0;
+                        DeliveryStateD = 0;
                     }
                     
                     // Authorization Request
@@ -2184,6 +2188,7 @@ void pollingRFA_Tx(){
         {
             buffer_A[x] = 0x00;
         }
+        
         uint8 decimal,DecimalFaltante;
 		buffer_A[0]  = 0xBC;
         buffer_A[1]  = 0xCB;

@@ -137,12 +137,9 @@ void RF_Task(void *arg)
                 else
                 {
                    RFOnline = 0;
-                }  
-                
+                }                  
                 buffer_rf[6] = 0xFF;
-                RF_Connection_ClearRxBuffer();
-                          
-                
+                RF_Connection_ClearRxBuffer();            
                 break;
             }
              
@@ -159,12 +156,8 @@ void RF_Task(void *arg)
                 pollingRFD_Tx();
             }
         }
-        vTaskDelayUntil(&xLastWakeTime, xFrequency);    
-        
+        vTaskDelayUntil(&xLastWakeTime, xFrequency);       
     }
-        
-       
-
 }
 
 

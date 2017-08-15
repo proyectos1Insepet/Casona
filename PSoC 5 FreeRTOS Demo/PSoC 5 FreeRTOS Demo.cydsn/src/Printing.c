@@ -482,11 +482,7 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
     	}    	                        
         for(x = 0; x < 13; x++)                                     //Producto	
         {																
-<<<<<<< HEAD
-    		write_psoc1(val,producto[side.a.hose - 1][x]);          //write_psoc1(val,producto[side.a.GradesHose[side.a.hose - 1] - 1][x]);
-=======
-    		write_psoc1(val,producto[side.a.GradesHose[side.a.hose]-1][x]);
->>>>>>> 5c842d0bba9be7ba28e94d434e518b82c447b4ea
+           write_psoc1(val,producto[side.a.GradesHose[side.a.hose - 1] - 1][x]);
     	}        
         
         write_psoc1(val,10);
