@@ -343,13 +343,11 @@ uint8 verificar_check(uint8 *datos, uint16 size){
 
 void pollingRF_Rx(uint8 PRF_rxBuffer[])
 {
-    uint16 i, x, y, j, contEscape;  
-    uint8 buffer_rfTMP;
+    uint16  x, y;      
     uint8 EEpromGradeAddress;
    
     ActiveRF = 1;
-    counterRF = 0;
-    i = 0;
+    counterRF = 0;   
     y = 0;
     buffer_tx[y] = 0xBC; y++;
     buffer_tx[y] = 0xCB; y++;
@@ -1723,75 +1721,92 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                     
                     for(x = 17; x < 47; x++)
                     {
-                        Encabezado1[x-17] = PRF_rxBuffer[x];
+                        Encabezado1[x-16] = PRF_rxBuffer[x];
                     }
                     for(x = 47; x < 77; x++)
                     {
-                        Encabezado2[x-47] = PRF_rxBuffer[x];
+                        Encabezado2[x-46] = PRF_rxBuffer[x];
                     }
                     for(x = 77; x < 107; x++)
                     {
-                        Encabezado3[x-77] = PRF_rxBuffer[x];
+                        Encabezado3[x-76] = PRF_rxBuffer[x];
                     }
                     for(x = 107; x < 137; x++)
                     {
-                        Encabezado4[x-107] = PRF_rxBuffer[x];
+                        Encabezado4[x-106] = PRF_rxBuffer[x];
                     }
                     for(x = 137; x < 167; x++)
                     {
-                        Encabezado5[x-137] = PRF_rxBuffer[x];
+                        Encabezado5[x-136] = PRF_rxBuffer[x];
                     }
                     for(x = 167; x < 197; x++)
                     {
-                        Pie1[x-167] = PRF_rxBuffer[x];
+                        Pie1[x-166] = PRF_rxBuffer[x];
                     }
                     for(x = 197; x < 227; x++)
                     {
-                        Pie2[x-227] = PRF_rxBuffer[x];
+                        Pie2[x-196] = PRF_rxBuffer[x];
                     }
                     for(x = 227; x < 257; x++)
                     {
-                        Pie3[x-227] = PRF_rxBuffer[x];
+                        Pie3[x-226] = PRF_rxBuffer[x];
                     }
                     for(x = 257; x < 273; x++)
                     {
-                        Product1[x-257] = PRF_rxBuffer[x];
+                        Product1[x-256] = PRF_rxBuffer[x];
                     }
                     for(x = 273; x < 289; x++)
                     {
-                        Product2[x-273] = PRF_rxBuffer[x];
+                        Product2[x-272] = PRF_rxBuffer[x];
                     }
                     for(x = 289; x < 305; x++)
                     {
-                        Product3[x-289] = PRF_rxBuffer[x];
+                        Product3[x-288] = PRF_rxBuffer[x];
                     }
                     for(x = 305; x < 321; x++)
                     {
-                        Product4[x-305] = PRF_rxBuffer[x];
+                        Product4[x-304] = PRF_rxBuffer[x];
                     }
+                    Encabezado1[0]   = 30;
+                    Encabezado2[0]   = 30;
+                    Encabezado3[0]   = 30;
+                    Encabezado4[0]   = 30;
+                    Encabezado5[0]   = 30;
+                    Pie1[0]          = 30;
+                    Pie2[0]          = 30;
+                    Pie3[0]          = 30;
+                    Product1[0]      = 16;
+                    Product2[0]      = 16;
+                    Product3[0]      = 16;
+                    Product4[0]      = 16;
                     CopiasCredito = PRF_rxBuffer[16];
                     write_hora();
                     write_fecha(); 
-//                    
-//                    for(x = 0 ; x < 30; x++)
-//                    {
-//                       // EEPROM_1_WriteByte(Encabezado1[x],16 + x);
-//                    }
-//                    for(x = 30 ; x < 60; x++)
-//                    {
-//                       // EEPROM_1_WriteByte(Encabezado2[x - 30], 16 + x);
-//                    }
-//                    for(x = 60 ; x < 90; x++){
-//                       // EEPROM_1_WriteByte(Encabezado3[x - 30], 16 + x);
-//                    }
-//                    for(x =90 ; x < 120; x++){
-//                       // EEPROM_1_WriteByte(Encabezado4[x-30],16+x);
-//                    }
-////                    side.a.dir = EEPROM_1_ReadByte(12);
-////                    side.b.dir = EEPROM_1_ReadByte(13);
-////                    side.c.dir = EEPROM_1_ReadByte(14);
-////                    side.d.dir = EEPROM_1_ReadByte(15);
-//                    //imprimir(printPortA,side.a.dir);
+                    logoPrint[0] = 0x01;
+                    logoPrint[1] = PRF_rxBuffer[15];
+                    WriteEeprom(0,logoPrint);
+                    WriteEeprom(30,Encabezado1);
+                    WriteEeprom(65,Encabezado2);
+                    WriteEeprom(100,Encabezado3);
+                    WriteEeprom(135,Encabezado4);
+                    WriteEeprom(200,Encabezado5);
+                    for(x = 1; x < 31; x++){
+                        EEPROM_1_WriteByte(Pie1[x],x+100);
+                    }
+                    //WriteEeprom(500,Pie1);
+                    //vTaskDelay( 20 / portTICK_PERIOD_MS );
+                    WriteEeprom(600,Pie2);
+                    vTaskDelay( 20 / portTICK_PERIOD_MS );
+                    for(x = 1; x < 31; x++){
+                        EEPROM_1_WriteByte(Pie3[x],x+130);
+                    }
+                    //WriteEeprom(700,Pie3);
+                    //vTaskDelay( 20 / portTICK_PERIOD_MS );
+                    WriteEeprom(335,Product1);
+                    WriteEeprom(355,Product2);
+                    vTaskDelay( 20 / portTICK_PERIOD_MS );
+                    WriteEeprom(375,Product3);
+                    WriteEeprom(395,Product4);
                 break;
                
                 case 0xE2:               //Configuracion de la posicion                                                 
@@ -1820,30 +1835,21 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                             side.d.GradesHose[x-8] = PRF_rxBuffer[x];
                         }
                     }
+                    side.a.GradesHose[0] = 0x04;  //Recordar modificar donde aparezcan
+                    side.b.GradesHose[0] = 0x04;
+                    side.c.GradesHose[0] = 0x04;
+                    side.d.GradesHose[0] = 0x04;
+                    PrinterType[0]       = 0x01;
+                    
                     lockTurn = PRF_rxBuffer[12];
                     EEPROM_1_WriteByte(lockTurn,7);
-
-//                    y = 60;
-//                    for(x = y; x< y+5; x++)
-//                    {
-//                        EEPROM_1_WriteByte(side.a.GradesHose[x-60],x);
-//                        y++;
-//                    }
-//                    for(x = y; x< y+5; x++)
-//                    {
-//                        EEPROM_1_WriteByte(side.b.GradesHose[x-50],x);
-//                        y++;
-//                    }
-//                    for(x = y; x< y+5; x++)
-//                    {
-//                        EEPROM_1_WriteByte(side.c.GradesHose[x-50],x);
-//                        y++;
-//                    }
-//                    for(x = y; x< y+5; x++)
-//                    {
-//                        EEPROM_1_WriteByte(side.d.GradesHose[x-50],x);
-//                        y++;
-//                    }
+                    
+                    PrinterType[1] = PRF_rxBuffer[7];
+                    WriteEeprom(2,PrinterType);
+                    WriteEeprom(4,side.a.GradesHose);
+                    WriteEeprom(9,side.b.GradesHose);
+                    WriteEeprom(14,side.c.GradesHose);
+                    WriteEeprom(19,side.d.GradesHose);
                 break;
                 
                 case 0xE4:               //Turno  
@@ -1997,7 +2003,7 @@ void pollingRFA_Tx(){
 		side.a.RFstateReport = 0;
         side.a.rfState = RF_IDLE;
         bufferAready = 1;
-        if(PrinterType == 1)
+        if(PrinterType[1] == 1)
         {
             printLogoP(printPortA,11);    
         }       
@@ -2355,7 +2361,7 @@ void pollingRFB_Tx(){
 		side.b.RFstateReport = 0;
         side.b.rfState = RF_IDLE;
         bufferAreadyB = 1;
-        if(PrinterType == 1)
+        if(PrinterType[1] == 1)
         {
             printLogoP(printPortB,11);    
         }       
@@ -2708,7 +2714,7 @@ void pollingRFC_Tx(){
 		side.c.RFstateReport = 0;
         side.c.rfState = RF_IDLE;
         bufferAreadyC = 1;
-        if(PrinterType == 1)
+        if(PrinterType[1] == 1)
         {
             printLogoP(printPortA,11);    
         }       
@@ -3068,7 +3074,7 @@ void pollingRFD_Tx(){
 		side.d.RFstateReport = 0;
         side.d.rfState = RF_IDLE;
         bufferAreadyD = 1;
-        if(PrinterType == 1)
+        if(PrinterType[1] == 1)
         {
             printLogoP(printPortB,11);    
         }       

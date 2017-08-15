@@ -343,52 +343,52 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
     uint8 x;        
     if(pos == side.a.dir || pos == side.c.dir)
     {
-        if(PrinterType == 1)
+        if(PrinterType[1] == 1)
         {
             printLogoP(printPortA,11);    
         }
     }
     if(pos == side.b.dir || pos == side.d.dir)
     {
-        if(PrinterType == 1)
+        if(PrinterType[1] == 1)
         {
             printLogoP(printPortB,11);    
         }
     }
     write_psoc1(val,10);
     
-    for(x = 0; x < 30; x++)
+    for(x = 1; x <= 30; x++)
     {
-        //write_psoc1(val,Encabezado1[x]);
-        write_psoc1(val,title1[x]);
+        write_psoc1(val,Encabezado1[x]);
+        //write_psoc1(val,title1[x]);
     }
     write_psoc1(val,10);
     
-    for(x = 0; x < 30; x++)
+    for(x = 1; x <= 30; x++)
     {
-        //write_psoc1(val,Encabezado2[x]);
-        write_psoc1(val,title2[x]);
+        write_psoc1(val,Encabezado2[x]);
+        //write_psoc1(val,title2[x]);
     }
     write_psoc1(val,10);
     
-    for(x = 0; x < 30; x++)
+    for(x = 1; x <= 30; x++)
     {
-        //write_psoc1(val,Encabezado3[x]);
-        write_psoc1(val,title3[x]);
+        write_psoc1(val,Encabezado3[x]);
+        //write_psoc1(val,title3[x]);
     }
     write_psoc1(val,10);
     
-    for(x = 0; x < 30; x++)
+    for(x = 1; x <= 30; x++)
     {
-        //write_psoc1(val,Encabezado4[x]);
-        write_psoc1(val,title4[x]);
+        write_psoc1(val,Encabezado4[x]);
+        //write_psoc1(val,title4[x]);
     }
     write_psoc1(val,10);
     
-    for(x = 0; x < 30; x++)
+    for(x = 1; x <= 30; x++)
     {
-        //write_psoc1(val,Encabezado4[x]);
-        write_psoc1(val,title5[x]);
+        write_psoc1(val,Encabezado5[x]);
+        //write_psoc1(val,title5[x]);
     }
     write_psoc1(val,10);
     
@@ -482,7 +482,7 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
     	}    	                        
         for(x = 0; x < 13; x++)                                     //Producto	
         {																
-    		write_psoc1(val,producto[side.a.GradesHose[side.a.hose-1]-1][x]);
+    		write_psoc1(val,producto[side.a.GradesHose[side.a.hose]-1][x]);
     	}        
         
         write_psoc1(val,10);
@@ -841,7 +841,7 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
     	}    	                        
         for(x = 0; x < 13; x++)                                     //Producto	
         {																
-    		write_psoc1(val,producto[side.b.GradesHose[side.b.hose-1]-1][x]);
+    		write_psoc1(val,producto[side.b.GradesHose[side.b.hose]-1][x]);
     	}
         write_psoc1(val,10);
         
@@ -1161,7 +1161,7 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
     	}    	                        
         for(x = 0; x < 13; x++)                                     //Producto	
         {																
-    		write_psoc1(val,producto[side.c.GradesHose[side.c.hose-1]-1][x]);
+    		write_psoc1(val,producto[side.c.GradesHose[side.c.hose]-1][x]);
     	}
         write_psoc1(val,10);
         
@@ -1482,7 +1482,7 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
     	}    	                        
         for(x = 0; x < 13; x++)                                     //Producto	
         {																
-    		write_psoc1(val,producto[side.d.GradesHose[side.d.hose-1]-1][x]);
+    		write_psoc1(val,producto[side.d.GradesHose[side.d.hose]-1][x]);
     	}
         write_psoc1(val,10);
         
@@ -1793,23 +1793,29 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
 	    }
     }
     
-    ////////////////  PIE DE PÁGINA /////////////////////////
+     ////////////////  PIE DE PÁGINA /////////////////////////
     for(x = 0; x < 30; x++)
     {
         write_psoc1(val,SEPARATOR[x]);
     }
     write_psoc1(val,10);
-    for(x = 0; x < 30; x++)
+    for(x = 1; x <= 30; x++)
     {
-        //write_psoc1(val,Encabezado4[x]);
-        write_psoc1(val,footer1[x]);
+        write_psoc1(val,Pie1[x]);
+        //write_psoc1(val,footer1[x]);
     }
     write_psoc1(val,10); 
-    for(x = 0; x < 30; x++)
+    for(x = 1; x <= 30; x++)
     {
-        //write_psoc1(val,Encabezado4[x]);
-        write_psoc1(val,footer2[x]);
+        write_psoc1(val,Pie2[x]);
+        //write_psoc1(val,footer2[x]);
     }    
+    write_psoc1(val,10); 
+    for(x = 1; x <= 30; x++)
+    {
+        write_psoc1(val,Pie3[x]);
+        //write_psoc1(val,footer2[x]);
+    }   
     write_psoc1(val,10); 
     write_psoc1(val,10);
     write_psoc1(val,10);
