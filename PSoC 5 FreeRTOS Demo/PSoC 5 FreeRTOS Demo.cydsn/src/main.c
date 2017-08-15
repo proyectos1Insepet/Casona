@@ -76,6 +76,8 @@ void StoreConfiguration(){
 */
 void loadConfiguration(){
   
+    uint16 x;
+    
     MoneyDec   = EEPROM_1_ReadByte(2);  //Punto decimal dinero
     VolDec     = EEPROM_1_ReadByte(3);  //Punto decimal volumen
     PPUDec     = EEPROM_1_ReadByte(4);  //Punto decimal PPU
@@ -93,7 +95,99 @@ void loadConfiguration(){
     side.b.dir = EEPROM_1_ReadByte(13); //Segunda posicion
     side.c.dir = EEPROM_1_ReadByte(14); //Tercera posicion
     side.d.dir = EEPROM_1_ReadByte(15); //Cuarta posicion
-    PrinterType = 1; // Tipo de impresora
+    PrinterType[1] = 1; // Tipo de impresora
+    
+    /// Leer desde eeprom externa ///
+    LeerEeprom(0,2);
+	for(x=0;x<=buffer_i2c[0];x++){
+		logoPrint[x]=buffer_i2c[x];
+	}
+    LeerEeprom(2,2);
+	for(x=0;x<=buffer_i2c[0];x++){
+		PrinterType[x]=buffer_i2c[x];
+	}
+    LeerEeprom(4,5);
+	for(x=0;x<=buffer_i2c[0];x++){
+		side.a.GradesHose[x]=buffer_i2c[x];
+	}
+    LeerEeprom(9,5);
+	for(x=0;x<=buffer_i2c[0];x++){
+		side.b.GradesHose[x]=buffer_i2c[x];
+	}
+    LeerEeprom(14,5);
+	for(x=0;x<=buffer_i2c[0];x++){
+		side.c.GradesHose[x]=buffer_i2c[x];
+	}
+    LeerEeprom(19,5);
+	for(x=0;x<=buffer_i2c[0];x++){
+		side.d.GradesHose[x]=buffer_i2c[x];
+	}    
+    LeerEeprom(335,17);
+	for(x=0;x<=buffer_i2c[0];x++){
+		Product1[x]=buffer_i2c[x];
+	}
+    LeerEeprom(355,17);
+	for(x=0;x<=buffer_i2c[0];x++){
+		Product2[x]=buffer_i2c[x];
+	}
+    LeerEeprom(375,17);
+	for(x=0;x<=buffer_i2c[0];x++){
+		Product3[x]=buffer_i2c[x];
+	}
+    LeerEeprom(395,17);
+	for(x=0;x<=buffer_i2c[0];x++){
+		Product4[x]=buffer_i2c[x];
+	}
+    LeerEeprom(30,31);
+	for(x=0;x<=buffer_i2c[0];x++){
+		Encabezado1[x]=buffer_i2c[x];
+	}
+    LeerEeprom(65,31);
+	for(x=0;x<=buffer_i2c[0];x++){
+		Encabezado2[x]=buffer_i2c[x];
+	}
+    LeerEeprom(100,31);
+	for(x=0;x<=buffer_i2c[0];x++){
+		Encabezado3[x]=buffer_i2c[x];
+	}
+    LeerEeprom(135,31);
+	for(x=0;x<=buffer_i2c[0];x++){
+		Encabezado4[x]=buffer_i2c[x];
+	}
+    LeerEeprom(200,31);
+	for(x=0;x<=buffer_i2c[0];x++){
+		Encabezado5[x]=buffer_i2c[x];
+	}
+    LeerEeprom(4,5);
+	for(x=0;x<=buffer_i2c[0];x++){
+		side.a.GradesHose[x]=buffer_i2c[x];
+	}
+    LeerEeprom(9,5);
+    for(x=0;x<=buffer_i2c[0];x++){
+		side.b.GradesHose[x]=buffer_i2c[x];
+	}
+    LeerEeprom(14,5);
+    for(x=0;x<=buffer_i2c[0];x++){
+		side.c.GradesHose[x]=buffer_i2c[x];
+	}
+    LeerEeprom(19,5);
+    for(x=0;x<=buffer_i2c[0];x++){
+		side.d.GradesHose[x]=buffer_i2c[x];
+	}
+    
+    //LeerEeprom(500,31);
+	for(x=1;x<=30;x++){
+		Pie1[x]=EEPROM_1_ReadByte(100+x);
+	}
+    LeerEeprom(600,31);
+	for(x=0;x<=buffer_i2c[0];x++){
+		Pie2[x]=buffer_i2c[x];
+	}
+    
+	for(x=1;x<=30;x++){
+		Pie3[x]=EEPROM_1_ReadByte(130+x);
+	}
+    //LeerEeprom(700,31);
 }
 
 /* 

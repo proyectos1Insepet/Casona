@@ -20,6 +20,7 @@
 #include <semphr.h>
 #include <protocol.h>
 #include <variables.h>
+#include <codetag.h>
 #include <keyboard.h>
 #include <ibutton.h>
 #include <RFPoll.h>
@@ -592,45 +593,34 @@ void PollingDisplay1(void){
         break;
             
         case 5: //Seleccion de producto            
-            if(1)//side.a.GradesHose[0] != 0)
-            {
-                if(NumPositions <= 2)  // ENCORE
-                {
-                    for(x = 0; x < 10; x++)
-                    {
-                        WriteMessage(1, productoA[x], 11, 7 + x, 2, 0x0000, 'Y'); //WriteMessage(1, producto[side.a.GradesHose[0]-1][x],11,7+x,2,0xFFFF,'Y');
-                    } 
-                }
-                else                    // PRIME
-                {
-                    for(x = 0; x < 10; x++)
-                    {
-                        WriteMessage(1, producto1[x], 11, 7 + x, 2, 0x0000, 'Y'); //WriteMessage(1, producto[side.a.GradesHose[0]-1][x],11,7+x,2,0xFFFF,'Y');
-                    } 
-                }
-            }
-            if (side.a.GradesHose[1] != 0)
+            if(side.a.GradesHose[1] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(1, producto2[x], 17, 8 + x, 2, 0x0000, 'Y');//WriteMessage(1, producto[side.a.GradesHose[1]-1][x],17,8+x,2,0x0000,'Y');
+                    WriteMessage(1, producto[side.a.GradesHose[1]-1][x],11,7+x,2,0x0000,'Y'); //WriteMessage(1, producto1[x],11,7+x,2,0x0000,'Y');
                 } 
             }
-            if(side.a.GradesHose[2] != 0)
+            if(side.a.GradesHose[2] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(1, producto[side.a.GradesHose[2] - 1][x], 23, 9 + x, 2, 0x0000, 'Y');
+                    WriteMessage(1, producto[side.a.GradesHose[2]-1][x],17,8+x,2,0x0000,'Y');//WriteMessage(1, producto2[x],17,8+x,2,0x0000,'Y');
                 } 
             }
-            if(side.a.GradesHose[3] != 0)
+            if(side.a.GradesHose[3] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(1, producto[side.a.GradesHose[3] - 1][x], 29, 10 + x, 2, 0x0000, 'Y');
+                    WriteMessage(1, producto[side.a.GradesHose[3]-1][x],23,9+x,2,0x0000,'Y');
                 } 
             }
-            
+            if(side.a.GradesHose[4] !=0)
+            {
+                for(x = 0; x < 10; x++)
+                {
+                    WriteMessage(1, producto[side.a.GradesHose[4]-1][x],29,10+x,2,0x0000,'Y');
+                } 
+            }            
             if(Display1_GetRxBufferSize() == 8)
             {
                 if((Display1_rxBuffer[0] == 0xAA) && (Display1_rxBuffer[6] == 0xC3) && (Display1_rxBuffer[7] == 0x3C))
@@ -974,9 +964,16 @@ void PollingDisplay1(void){
                             SetPicture(1, DISPLAY_ESPERANDO_ID);                            
                         break; 
                         case 0xB7:  //ID Number
-//                            bufferDisplay1.flagKeyboard = 0;
-//                            flowDisplay1 = 7;
-//                            SetPicture(1,DISPLAY_SUBA_MANIJA);                            
+//                            flowDisplay1 = 24;
+//                            numberKeys1 = 0;                            
+//                            bufferDisplay1.flagPrint =  1;
+//                            Tag_ClearRxBuffer();
+//                            Tag_ClearTxBuffer();
+//                            Tag_PutChar('O');
+//                            Tag_PutChar('K');
+//                            Tag_PutChar(0x01);
+//                            vTaskDelay( 100 / portTICK_PERIOD_MS );
+//                            SetPicture(1, DISPLAY_ESPERANDO_ID);                           
                         break;
                         case 0x94:  //Pantalla Inicial
                             bufferDisplay1.flagPrint =  0;
@@ -1094,10 +1091,72 @@ void PollingDisplay1(void){
                 }
                 
                 Display1_ClearRxBuffer();
+            }                                                          
+        break;
+        case 24:
+            for(x=0;x<=29;x++){
+                temporal[x]=0x00;
             }
-          
-                                    
-        break;    
+            if(serial_codetag(1)==1){
+                for(x=0;x<=temporal[0];x++){
+                    bufferDisplay1.idSerial[x]=temporal[x];
+                }
+                bufferDisplay1.idSerial[0]=16;
+				y=16;
+				for(x=1;x<=8;x++){
+					if((temporal[x]&0x0F)>=10){
+						bufferDisplay1.idSerial[y]=(temporal[x]&0x0F)+55;
+					}else{
+						bufferDisplay1.idSerial[y]=(temporal[x]&0x0F)+48;				
+					}
+                    y--;
+					if(((temporal[x]>>4)&0x0F)>=10){
+						bufferDisplay1.idSerial[y]=((temporal[x]>>4)&0x0F)+55;
+					}else{
+						bufferDisplay1.idSerial[y]=((temporal[x]>>4)&0x0F)+48;				
+					}
+                    y--;
+				}
+                
+                // Authorization request
+                SetPicture(1,DISPLAY_ID_RECONOCIDO);                                                                 
+                vTaskDelay( 500 / portTICK_PERIOD_MS );                       
+                iButtonFlag = 1;
+                SetPicture(1, DISPLAY_FORMA_PROGRAMACION);
+                flowDisplay1 = 3;
+            }
+            //Touch for return to init display
+            if(Display1_GetRxBufferSize() == 8)
+            {
+                if((Display1_rxBuffer[0] == 0xAA) && (Display1_rxBuffer[6] == 0xC3) && (Display1_rxBuffer[7] == 0x3C))
+                {
+                    switch(Display1_rxBuffer[3])
+                    {                        
+                        case 0x7E:  //Init Screen                                                        
+                            SetPicture(1, DISPLAY_INICIO0);
+                            flowDisplay1 = 0;
+                            bufferDisplay1.flagPrint =  0;
+                            PresetFlag = 0;
+                            iButtonFlag = 0;
+                            AuthType = 0;
+                            Display1_ClearRxBuffer();
+                        break;
+                        
+                        case 0x94:  //Cancel Button                                                        
+                            SetPicture(1, DISPLAY_INICIO0);
+                            flowDisplay1 = 0;
+                            bufferDisplay1.flagPrint =  0;
+                            PresetFlag = 0;
+                            iButtonFlag = 0;
+                            AuthType = 0;
+                            Display1_ClearRxBuffer();
+                        break;
+                    }                    
+                }
+                
+                Display1_ClearRxBuffer();
+            } 
+        break;
     ///////////////FIN CASOS PARA CRÉDITO  /////////////////////  
     
     //////////// CASOS PARA CONFIGURACIONES  ///////////////////
@@ -1966,40 +2025,32 @@ void PollingDisplay2(void){
         break;
             
         case 5: //Menu de seleccion de producto
-            if(NumPositions <= 2)//(side.b.GradesHose[0] !=0)
-            {
-                for(x = 0; x < 10; x++)
-                {
-                    WriteMessage(2, productoB[x], 11, 7 + x, 2, 0x0000,'Y');//WriteMessage(2, producto[side.b.GradesHose[0]-1][x],11,7+x,2,0x0000,'Y');
-                } 
-            }
-            else
-            {
-                for(x = 0; x < 10; x++)
-                {
-                    WriteMessage(2, producto2[x],11, 7 + x, 2, 0x0000, 'Y');//WriteMessage(2, producto[side.b.GradesHose[0]-1][x],11,7+x,2,0x0000,'Y');
-                } 
-            }
-
             if(side.b.GradesHose[1] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(2, producto2[x],17,8+x,2,0x0000,'Y');//WriteMessage(2, producto[side.b.GradesHose[1]-1][x],17,8+x,2,0x0000,'Y');
+                    WriteMessage(2, producto[side.b.GradesHose[1]-1][x],11,7+x,2,0x0000,'Y');//WriteMessage(2, producto1[x],11,7+x,2,0x0000,'Y');
                 } 
             }
             if(side.b.GradesHose[2] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(2, producto[side.b.GradesHose[2]-1][x],23,9+x,2,0x0000,'Y');
+                    WriteMessage(2, producto[side.b.GradesHose[2]-1][x],17,8+x,2,0x0000,'Y');//WriteMessage(2, producto2[x],17,8+x,2,0x0000,'Y');
                 } 
             }
             if(side.b.GradesHose[3] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(2, producto[side.b.GradesHose[3]-1][x],29,10+x,2,0x0000,'Y');
+                    WriteMessage(2, producto[side.b.GradesHose[3]-1][x],23,9+x,2,0x0000,'Y');
+                } 
+            }
+            if(side.b.GradesHose[4] !=0)
+            {
+                for(x = 0; x < 10; x++)
+                {
+                    WriteMessage(2, producto[side.b.GradesHose[4]-1][x],29,10+x,2,0x0000,'Y');
                 } 
             }
             if(Display2_GetRxBufferSize() == 8)
@@ -2331,9 +2382,16 @@ void PollingDisplay2(void){
                             SetPicture(2,DISPLAY_ESPERANDO_ID);                            
                         break; 
                         case 0xB7:  //ID por número
-//                            bufferDisplay2.flagKeyboard = 0;
-//                            flowDisplay2 = 7;//Esperando estado del dispensador                                                          
-//                            SetPicture(2,DISPLAY_SUBA_MANIJA);                            
+//                            flowDisplay2 = 24;
+//                            numberKeys2 = 0;                            
+//                            bufferDisplay2.flagPrint =  1;
+//                            Tag_ClearRxBuffer();
+//                            Tag_ClearTxBuffer();
+//                            Tag_PutChar('O');
+//                            Tag_PutChar('K');
+//                            Tag_PutChar(0x02);
+//                            vTaskDelay( 100 / portTICK_PERIOD_MS );
+//                            SetPicture(2, DISPLAY_ESPERANDO_ID);                    
                         break;
                         case 0x94:  //Pantalla Inicial 
                             bufferDisplay2.flagPrint =  0;
@@ -2450,10 +2508,71 @@ void PollingDisplay2(void){
                 
                 //vTaskDelay( 10 / portTICK_PERIOD_MS );              //Freertos delay
                 Display2_ClearRxBuffer();
+            }                                             
+        break;
+        case 24:
+            for(x=0;x<=29;x++){
+                temporal[x]=0x00;
             }
-           
-                                 
-        break;    
+            if(serial_codetag(2)==1){
+                for(x=0;x<=temporal[0];x++){
+                    bufferDisplay2.idSerial[x]=temporal[x];
+                }
+                bufferDisplay2.idSerial[0]=16;
+				y=16;
+				for(x=1;x<=8;x++){
+					if((temporal[x]&0x0F)>=10){
+						bufferDisplay2.idSerial[y]=(temporal[x]&0x0F)+55;
+					}else{
+						bufferDisplay2.idSerial[y]=(temporal[x]&0x0F)+48;				
+					}
+                    y--;
+					if(((temporal[x]>>4)&0x0F)>=10){
+						bufferDisplay2.idSerial[y]=((temporal[x]>>4)&0x0F)+55;
+					}else{
+						bufferDisplay2.idSerial[y]=((temporal[x]>>4)&0x0F)+48;				
+					}
+                    y--;
+				}                
+                // Authorization request
+                SetPicture(2,DISPLAY_ID_RECONOCIDO);                                                                 
+                vTaskDelay( 500 / portTICK_PERIOD_MS );                       
+                iButtonFlag2 = 1;
+                SetPicture(2, DISPLAY_FORMA_PROGRAMACION);
+                flowDisplay2 = 3;
+            }
+            //Touch for return to init display
+            if(Display2_GetRxBufferSize() == 8)
+            {
+                if((Display2_rxBuffer[0] == 0xAA) && (Display2_rxBuffer[6] == 0xC3) && (Display2_rxBuffer[7] == 0x3C))
+                {
+                    switch(Display2_rxBuffer[3])
+                    {                        
+                        case 0x7E:  //Init Screen                                                        
+                            SetPicture(2, DISPLAY_INICIO0);
+                            flowDisplay2 = 0;
+                            bufferDisplay2.flagPrint =  0;
+                            PresetFlag2 = 0;
+                            iButtonFlag2 = 0;
+                            AuthType2 = 0;
+                            Display2_ClearRxBuffer();
+                        break;
+                        
+                        case 0x94:  //Cancel Button                                                        
+                            SetPicture(2, DISPLAY_INICIO0);
+                            flowDisplay2 = 0;
+                            bufferDisplay2.flagPrint =  0;
+                            PresetFlag2 = 0;
+                            iButtonFlag2 = 0;
+                            AuthType2 = 0;
+                            Display2_ClearRxBuffer();
+                        break;
+                    }                    
+                }
+                
+                Display2_ClearRxBuffer();
+            } 
+        break;
     ///////////////FIN CASOS PARA CRÉDITO  /////////////////////  
     
     //////////// CASOS PARA CONFIGURACIONES  ///////////////////
@@ -2970,28 +3089,28 @@ void PollingDisplay2(void){
         break;
         case 23: //Pantalla imprimiendo durate copia de recibo
 
-        if(bufferDisplay2.PrintCopy == 0)
-        {
-            CounterB = 0;
-            vTaskDelay( 2000 / portTICK_PERIOD_MS );
-            flowDisplay2 = 0;
-            Display2_ClearRxBuffer();
-        }
-        else
-        {
-            if(CounterB < 100)  // 20 segundos de espera aprox.
+            if(bufferDisplay2.PrintCopy == 0)
             {
-                vTaskDelay( 100 / portTICK_PERIOD_MS );
-                CounterB++; 
+                CounterB = 0;
+                vTaskDelay( 2000 / portTICK_PERIOD_MS );
+                flowDisplay2 = 0;
+                Display2_ClearRxBuffer();
             }
             else
             {
-                CounterB = 0;
-                flowDisplay2 = 0;               
-                Display2_ClearRxBuffer();
-            } 
+                if(CounterB < 100)  // 20 segundos de espera aprox.
+                {
+                    vTaskDelay( 100 / portTICK_PERIOD_MS );
+                    CounterB++; 
+                }
+                else
+                {
+                    CounterB = 0;
+                    flowDisplay2 = 0;               
+                    Display2_ClearRxBuffer();
+                } 
 
-        }      
+            }      
         break;
          
     }    
@@ -3311,39 +3430,35 @@ void PollingDisplay3(void){
             }
         break;
             
-        case 5: //Seleccion de producto
-            
-
-            if(1)
-            {
-                for(x = 0; x < 10; x++)
-                {
-                    WriteMessage(1, producto3[x], 11, 7 + x, 2, 0x0000, 'Y'); //WriteMessage(1, producto[side.a.GradesHose[0]-1][x],11,7+x,2,0xFFFF,'Y');
-                } 
-            }
-
+        case 5: //Seleccion de producto            
             if(side.c.GradesHose[1] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(1, producto[side.c.GradesHose[1]-1][x],17,8+x,2,0x0000,'Y');
+                   WriteMessage(1, producto[side.a.GradesHose[1]-1][x],11,7+x,2,0x0000,'Y');//WriteMessage(1, producto1[x],11,7+x,2,0x0000,'Y'); //
                 } 
             }
             if(side.c.GradesHose[2] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(1, producto[side.c.GradesHose[2]-1][x],23,9+x,2,0x0000,'Y');
+                    WriteMessage(1, producto[side.c.GradesHose[2]-1][x],17,8+x,2,0x0000,'Y');
                 } 
             }
             if(side.c.GradesHose[3] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(1, producto[side.c.GradesHose[3]-1][x],29,10+x,2,0x0000,'Y');
+                    WriteMessage(1, producto[side.c.GradesHose[3]-1][x],23,9+x,2,0x0000,'Y');
                 } 
             }
-            
+            if(side.c.GradesHose[4] !=0)
+            {
+                for(x = 0; x < 10; x++)
+                {
+                    WriteMessage(1, producto[side.c.GradesHose[4]-1][x],29,10+x,2,0x0000,'Y');
+                } 
+            }            
             if(Display1_GetRxBufferSize() == 8)
             {
                 if((Display1_rxBuffer[0] == 0xAA) && (Display1_rxBuffer[6] == 0xC3) && (Display1_rxBuffer[7] == 0x3C))
@@ -3686,9 +3801,16 @@ void PollingDisplay3(void){
                             SetPicture(1, DISPLAY_ESPERANDO_ID);                            
                         break; 
                         case 0xB7:  //ID Number
-//                            bufferDisplay3.flagKeyboard = 0;
-//                            flowDisplay3 = 7;                                                        
-//                            SetPicture(1,DISPLAY_SUBA_MANIJA);                            
+//                            flowDisplay3 = 24;
+//                            numberKeys3 = 0;                            
+//                            bufferDisplay3.flagPrint =  1;
+//                            Tag_ClearRxBuffer();
+//                            Tag_ClearTxBuffer();
+//                            Tag_PutChar('O');
+//                            Tag_PutChar('K');
+//                            Tag_PutChar(0x01);
+//                            vTaskDelay( 100 / portTICK_PERIOD_MS );
+//                            SetPicture(1, DISPLAY_ESPERANDO_ID);
                         break;
                         case 0x94:  //Pantalla Inicial
                             bufferDisplay3.flagPrint =  0;
@@ -3805,6 +3927,71 @@ void PollingDisplay3(void){
             }
           
                                     
+        break;
+            
+        case 24:
+            for(x=0;x<=29;x++){
+                temporal[x]=0x00;
+            }
+            if(serial_codetag(1)==1){
+                for(x=0;x<=temporal[0];x++){
+                    bufferDisplay3.idSerial[x]=temporal[x];
+                }
+                bufferDisplay3.idSerial[0]=16;
+				y=16;
+				for(x=1;x<=8;x++){
+					if((temporal[x]&0x0F)>=10){
+						bufferDisplay3.idSerial[y]=(temporal[x]&0x0F)+55;
+					}else{
+						bufferDisplay3.idSerial[y]=(temporal[x]&0x0F)+48;				
+					}
+                    y--;
+					if(((temporal[x]>>4)&0x0F)>=10){
+						bufferDisplay3.idSerial[y]=((temporal[x]>>4)&0x0F)+55;
+					}else{
+						bufferDisplay3.idSerial[y]=((temporal[x]>>4)&0x0F)+48;				
+					}
+                    y--;
+				}
+                
+                // Authorization request
+                SetPicture(1,DISPLAY_ID_RECONOCIDO);                                                                 
+                vTaskDelay( 500 / portTICK_PERIOD_MS );                       
+                iButtonFlag3 = 1;
+                SetPicture(1, DISPLAY_FORMA_PROGRAMACION);
+                flowDisplay3 = 3;
+            }
+            //Touch for return to init display
+            if(Display1_GetRxBufferSize() == 8)
+            {
+                if((Display1_rxBuffer[0] == 0xAA) && (Display1_rxBuffer[6] == 0xC3) && (Display1_rxBuffer[7] == 0x3C))
+                {
+                    switch(Display1_rxBuffer[3])
+                    {                        
+                        case 0x7E:  //Init Screen                                                        
+                            SetPicture(1, DISPLAY_INICIO0);
+                            flowDisplay3 = 0;
+                            bufferDisplay3.flagPrint =  0;
+                            PresetFlag3 = 0;
+                            iButtonFlag3 = 0;
+                            AuthType3 = 0;
+                            Display1_ClearRxBuffer();
+                        break;
+                        
+                        case 0x94:  //Cancel Button                                                        
+                            SetPicture(1, DISPLAY_INICIO0);
+                            flowDisplay3 = 0;
+                            bufferDisplay3.flagPrint =  0;
+                            PresetFlag3 = 0;
+                            iButtonFlag3 = 0;
+                            AuthType3 = 0;
+                            Display1_ClearRxBuffer();
+                        break;
+                    }                    
+                }
+                
+                Display1_ClearRxBuffer();
+            } 
         break;    
     ///////////////FIN CASOS PARA CRÉDITO  /////////////////////  
     
@@ -4665,35 +4852,33 @@ void PollingDisplay4(void){
             }
         break;
             
-        case 5: //Menu de seleccion de producto
-        
-            if(1)
-            {
-                for(x = 0; x < 10; x++)
-                {
-                    WriteMessage(2, producto4[x], 11, 7 + x, 2, 0x0000, 'Y');
-                } 
-            }
-
+        case 5: //Menu de seleccion de producto        
             if(side.d.GradesHose[1] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(2, producto[side.d.GradesHose[1] - 1][x], 17, 8 + x, 2, 0x0000, 'Y');
+                    WriteMessage(2, producto[side.d.GradesHose[1]-1][x],11,7+x,2,0x0000,'Y');
                 } 
             }
             if(side.d.GradesHose[2] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(2, producto[side.d.GradesHose[2] - 1][x], 23, 9 + x, 2, 0x0000, 'Y');
+                    WriteMessage(2, producto[side.d.GradesHose[2]-1][x],17,8+x,2,0x0000,'Y');
                 } 
             }
             if(side.d.GradesHose[3] !=0)
             {
                 for(x = 0; x < 10; x++)
                 {
-                    WriteMessage(2, producto[side.d.GradesHose[3] - 1][x], 29, 10 + x, 2, 0x0000, 'Y');
+                    WriteMessage(2, producto[side.d.GradesHose[3]-1][x],23,9+x,2,0x0000,'Y');
+                } 
+            }
+            if(side.d.GradesHose[4] !=0)
+            {
+                for(x = 0; x < 10; x++)
+                {
+                    WriteMessage(2, producto[side.d.GradesHose[4]-1][x],29,10+x,2,0x0000,'Y');
                 } 
             }
             if(Display2_GetRxBufferSize() == 8)
@@ -5034,9 +5219,16 @@ void PollingDisplay4(void){
                             SetPicture(2,DISPLAY_ESPERANDO_ID);                            
                         break; 
                         case 0xB7:  //ID por número
-//                            bufferDisplay4.flagKeyboard = 0;
-//                            flowDisplay4 = 7;//Esperando estado del dispensador                                                          
-//                            SetPicture(2,DISPLAY_SUBA_MANIJA);                            
+//                            flowDisplay4 = 23;
+//                            numberKeys4 = 0;                            
+//                            bufferDisplay4.flagPrint =  1;
+//                            Tag_ClearRxBuffer();
+//                            Tag_ClearTxBuffer();
+//                            Tag_PutChar('O');
+//                            Tag_PutChar('K');
+//                            Tag_PutChar(0x02);
+//                            vTaskDelay( 100 / portTICK_PERIOD_MS );
+//                            SetPicture(2, DISPLAY_ESPERANDO_ID);    
                         break;
                         case 0x94:  //Pantalla Inicial 
                             bufferDisplay4.flagPrint =  0;
@@ -5155,8 +5347,70 @@ void PollingDisplay4(void){
                 //vTaskDelay( 10 / portTICK_PERIOD_MS );              //Freertos delay
                 Display2_ClearRxBuffer();
             }
-           
-                                 
+                                                        
+        break; 
+        
+        case 24:
+            for(x=0;x<=29;x++){
+                temporal[x]=0x00;
+            }
+            if(serial_codetag(2)==1){
+                for(x=0;x<=temporal[0];x++){
+                    bufferDisplay4.idSerial[x]=temporal[x];
+                }
+                bufferDisplay4.idSerial[0]=16;
+				y=16;
+				for(x=1;x<=8;x++){
+					if((temporal[x]&0x0F)>=10){
+						bufferDisplay4.idSerial[y]=(temporal[x]&0x0F)+55;
+					}else{
+						bufferDisplay4.idSerial[y]=(temporal[x]&0x0F)+48;				
+					}
+                    y--;
+					if(((temporal[x]>>4)&0x0F)>=10){
+						bufferDisplay4.idSerial[y]=((temporal[x]>>4)&0x0F)+55;
+					}else{
+						bufferDisplay4.idSerial[y]=((temporal[x]>>4)&0x0F)+48;				
+					}
+                    y--;
+				}                
+                // Authorization request
+                SetPicture(2,DISPLAY_ID_RECONOCIDO);                                                                 
+                vTaskDelay( 500 / portTICK_PERIOD_MS );                       
+                iButtonFlag4 = 1;
+                SetPicture(2, DISPLAY_FORMA_PROGRAMACION);
+                flowDisplay4 = 3;
+            }
+            //Touch for return to init display
+            if(Display2_GetRxBufferSize() == 8)
+            {
+                if((Display2_rxBuffer[0] == 0xAA) && (Display2_rxBuffer[6] == 0xC3) && (Display2_rxBuffer[7] == 0x3C))
+                {
+                    switch(Display2_rxBuffer[3])
+                    {                        
+                        case 0x7E:  //Init Screen                                                        
+                            SetPicture(2, DISPLAY_INICIO0);
+                            flowDisplay4 = 0;
+                            bufferDisplay4.flagPrint =  0;
+                            PresetFlag4 = 0;
+                            iButtonFlag4 = 0;
+                            AuthType4 = 0;
+                            Display2_ClearRxBuffer();
+                        break;
+                        
+                        case 0x94:  //Cancel Button                                                        
+                            SetPicture(2, DISPLAY_INICIO0);
+                            flowDisplay4 = 0;
+                            bufferDisplay4.flagPrint =  0;
+                            PresetFlag4 = 0;
+                            iButtonFlag4 = 0;
+                            AuthType4 = 0;
+                            Display2_ClearRxBuffer();
+                        break;
+                    }                    
+                }                
+                Display2_ClearRxBuffer();
+            } 
         break;    
     ///////////////FIN CASOS PARA CRÉDITO  /////////////////////  
     
