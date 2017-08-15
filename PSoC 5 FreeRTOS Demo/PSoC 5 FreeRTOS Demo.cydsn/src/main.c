@@ -91,10 +91,7 @@ void loadConfiguration(){
     IDCast[1]  = EEPROM_1_ReadByte(11); //ID Estacion2    
     
     configAccess[0] = 0x04; 
-    side.a.dir = EEPROM_1_ReadByte(12); //Primera posicion
-    side.b.dir = EEPROM_1_ReadByte(13); //Segunda posicion
-    side.c.dir = EEPROM_1_ReadByte(14); //Tercera posicion
-    side.d.dir = EEPROM_1_ReadByte(15); //Cuarta posicion
+
     PrinterType[1] = 1; // Tipo de impresora
     
     /// Leer desde eeprom externa ///
@@ -188,6 +185,10 @@ void loadConfiguration(){
 		Pie3[x]=EEPROM_1_ReadByte(130+x);
 	}
     //LeerEeprom(700,31);
+    side.a.dir = EEPROM_1_ReadByte(12); //Primera posicion
+    side.b.dir = EEPROM_1_ReadByte(13); //Segunda posicion
+    side.c.dir = EEPROM_1_ReadByte(14); //Tercera posicion
+    side.d.dir = EEPROM_1_ReadByte(15); //Cuarta posicion
 }
 
 /* 

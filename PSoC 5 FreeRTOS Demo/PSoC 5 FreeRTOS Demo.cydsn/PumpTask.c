@@ -78,19 +78,19 @@ void InitDisplay1(){
       
     for(x = 0; x < 13; x++)
     {
-        producto[0][x] = producto1[x];
+        producto[0][x] = Product1[x];
     }
     for(x = 0; x < 13; x++)
     {
-        producto[1][x] = producto2[x];
+        producto[1][x] = Product2[x];
     }
     for(x = 0; x < 13;x++)
     {
-        producto[2][x] = producto3[x];
+        producto[2][x] = Product3[x];
     }
     for(x = 0; x < 13;x++)
     {
-        producto[3][x] = producto4[x];
+        producto[3][x] = Product4[x];
     }
     
     if(NumPositions == 2)
@@ -595,30 +595,30 @@ void PollingDisplay1(void){
         case 5: //Seleccion de producto            
             if(side.a.GradesHose[1] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(1, producto[side.a.GradesHose[1]-1][x],11,7+x,2,0x0000,'Y'); //WriteMessage(1, producto1[x],11,7+x,2,0x0000,'Y');
+                    WriteMessage(1, producto[side.a.GradesHose[1]-1][x],11,6+x,2,0x0000,'Y'); //WriteMessage(1, producto1[x],11,7+x,2,0x0000,'Y');
                 } 
             }
             if(side.a.GradesHose[2] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(1, producto[side.a.GradesHose[2]-1][x],17,8+x,2,0x0000,'Y');//WriteMessage(1, producto2[x],17,8+x,2,0x0000,'Y');
+                    WriteMessage(1, producto[side.a.GradesHose[2]-1][x],17,7+x,2,0x0000,'Y');//WriteMessage(1, producto2[x],17,8+x,2,0x0000,'Y');
                 } 
             }
             if(side.a.GradesHose[3] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(1, producto[side.a.GradesHose[3]-1][x],23,9+x,2,0x0000,'Y');
+                    WriteMessage(1, producto[side.a.GradesHose[3]-1][x],23,8+x,2,0x0000,'Y');
                 } 
             }
             if(side.a.GradesHose[4] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(1, producto[side.a.GradesHose[4]-1][x],29,10+x,2,0x0000,'Y');
+                    WriteMessage(1, producto[side.a.GradesHose[4]-1][x],29,9+x,2,0x0000,'Y');
                 } 
             }            
             if(Display1_GetRxBufferSize() == 8)
@@ -2027,30 +2027,30 @@ void PollingDisplay2(void){
         case 5: //Menu de seleccion de producto
             if(side.b.GradesHose[1] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(2, producto[side.b.GradesHose[1]-1][x],11,7+x,2,0x0000,'Y');//WriteMessage(2, producto1[x],11,7+x,2,0x0000,'Y');
+                    WriteMessage(2, producto[side.b.GradesHose[1]-1][x],11,6+x,2,0x0000,'Y');//WriteMessage(2, producto1[x],11,7+x,2,0x0000,'Y');
                 } 
             }
             if(side.b.GradesHose[2] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(2, producto[side.b.GradesHose[2]-1][x],17,8+x,2,0x0000,'Y');//WriteMessage(2, producto2[x],17,8+x,2,0x0000,'Y');
+                    WriteMessage(2, producto[side.b.GradesHose[2]-1][x],17,7+x,2,0x0000,'Y');//WriteMessage(2, producto2[x],17,8+x,2,0x0000,'Y');
                 } 
             }
             if(side.b.GradesHose[3] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(2, producto[side.b.GradesHose[3]-1][x],23,9+x,2,0x0000,'Y');
+                    WriteMessage(2, producto[side.b.GradesHose[3]-1][x],23,8+x,2,0x0000,'Y');
                 } 
             }
             if(side.b.GradesHose[4] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(2, producto[side.b.GradesHose[4]-1][x],29,10+x,2,0x0000,'Y');
+                    WriteMessage(2, producto[side.b.GradesHose[4]-1][x],29,9+x,2,0x0000,'Y');
                 } 
             }
             if(Display2_GetRxBufferSize() == 8)
@@ -3433,30 +3433,30 @@ void PollingDisplay3(void){
         case 5: //Seleccion de producto            
             if(side.c.GradesHose[1] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                   WriteMessage(1, producto[side.a.GradesHose[1]-1][x],11,7+x,2,0x0000,'Y');//WriteMessage(1, producto1[x],11,7+x,2,0x0000,'Y'); //
+                   WriteMessage(1, producto[side.a.GradesHose[1]-1][x],11,6+x,2,0x0000,'Y');//WriteMessage(1, producto1[x],11,7+x,2,0x0000,'Y'); //
                 } 
             }
             if(side.c.GradesHose[2] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(1, producto[side.c.GradesHose[2]-1][x],17,8+x,2,0x0000,'Y');
+                    WriteMessage(1, producto[side.c.GradesHose[2]-1][x],17,7+x,2,0x0000,'Y');
                 } 
             }
             if(side.c.GradesHose[3] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(1, producto[side.c.GradesHose[3]-1][x],23,9+x,2,0x0000,'Y');
+                    WriteMessage(1, producto[side.c.GradesHose[3]-1][x],23,8+x,2,0x0000,'Y');
                 } 
             }
             if(side.c.GradesHose[4] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(1, producto[side.c.GradesHose[4]-1][x],29,10+x,2,0x0000,'Y');
+                    WriteMessage(1, producto[side.c.GradesHose[4]-1][x],29,9+x,2,0x0000,'Y');
                 } 
             }            
             if(Display1_GetRxBufferSize() == 8)
@@ -4855,30 +4855,30 @@ void PollingDisplay4(void){
         case 5: //Menu de seleccion de producto        
             if(side.d.GradesHose[1] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(2, producto[side.d.GradesHose[1]-1][x],11,7+x,2,0x0000,'Y');
+                    WriteMessage(2, producto[side.d.GradesHose[1]-1][x],11,6+x,2,0x0000,'Y');
                 } 
             }
             if(side.d.GradesHose[2] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(2, producto[side.d.GradesHose[2]-1][x],17,8+x,2,0x0000,'Y');
+                    WriteMessage(2, producto[side.d.GradesHose[2]-1][x],17,7+x,2,0x0000,'Y');
                 } 
             }
             if(side.d.GradesHose[3] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(2, producto[side.d.GradesHose[3]-1][x],23,9+x,2,0x0000,'Y');
+                    WriteMessage(2, producto[side.d.GradesHose[3]-1][x],23,8+x,2,0x0000,'Y');
                 } 
             }
             if(side.d.GradesHose[4] !=0)
             {
-                for(x = 0; x < 10; x++)
+                for(x = 1; x < 11; x++)
                 {
-                    WriteMessage(2, producto[side.d.GradesHose[4]-1][x],29,10+x,2,0x0000,'Y');
+                    WriteMessage(2, producto[side.d.GradesHose[4]-1][x],29,9+x,2,0x0000,'Y');
                 } 
             }
             if(Display2_GetRxBufferSize() == 8)

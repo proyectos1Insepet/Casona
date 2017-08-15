@@ -139,15 +139,15 @@ void printLogoK(uint8 val, uint8 logo){
 		break;
 			
 		case 5:
-//			for(i=0;i<=944;i++){
-//        		write_psoc1(val,exito[i]);			
-//			}
+			for(i=0;i<=944;i++){
+        		write_psoc1(val,exito[i]);			
+			}
 		break;
 			
 		case 6:
-			for(i=0;i<=1511;i++){
-        		write_psoc1(val,National[i]);			
-			}
+//			for(i=0;i<=1511;i++){
+//        		write_psoc1(val,National[i]);			
+//			}
 		break;	
 			
 		case 7:
@@ -179,24 +179,29 @@ void printLogoK(uint8 val, uint8 logo){
         		write_psoc1(val,terpel[i]);			
 			}
 		break;
+            
+        case 12:
+			for(i=0;i<=1511;i++){
+        		write_psoc1(val,petromil[i]);			
+			}
+		break;
 			
-		case 12:
+		case 13:
 			for(i=0;i<=1511;i++){
         		write_psoc1(val,texaco[i]);			
 			}
 		break;	
 			
-		case 13:
+		case 14:
 			for(i=0;i<=755;i++){
         		write_psoc1(val,zeus[i]);			
 			}
 		break;
 			
-		case 14:
-			for(i=0;i<=1511;i++){
-        		write_psoc1(val,petromil[i]);			
-			}
-		break;		
+        case 255:
+			
+		break;
+				
 	}	
 	write_psoc1(val,10);
 	write_psoc1(val,0x1D);
@@ -257,14 +262,14 @@ void printLogoP(uint8 val, uint8 logo){
 		break;
 			
 		case 5:
-//			for(i=0;i<=943;i++){
-//        		write_psoc1(val,exito[i]);			
-//			}
+			for(i=0;i<=943;i++){
+        		write_psoc1(val,exito[i]);			
+			}
 		break;
 			
 		case 6:
 			for(i=0;i<=943;i++){
-        		write_psoc1(val,National1[i]);			
+        		write_psoc1(val,puma[i]);			
 			}
 		break;	
 			
@@ -297,24 +302,30 @@ void printLogoP(uint8 val, uint8 logo){
         		write_psoc1(val,terpel1[i]);			
 			}
 		break;
+        
+        case 12:
+			for(i=0;i<=943;i++){
+        		write_psoc1(val,petromil1[i]);			
+			}
+		break;
 			
-		case 12:
+		case 13:
 			for(i=0;i<=943;i++){
         		write_psoc1(val,texaco1[i]);			
 			}
 		break;	
 			
-		case 13:
+		case 14:
 			for(i=0;i<=943;i++){
         		write_psoc1(val,zeus1[i]);			
 			}
 		break;
+            
+        case 255:
 			
-		case 14:
-			for(i=0;i<=943;i++){
-        		write_psoc1(val,petromil1[i]);			
-			}
-		break;		
+		break;
+			
+				
 	}	
 	write_psoc1(val,0x1B);
 	write_psoc1(val,0x40);
@@ -345,14 +356,18 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
     {
         if(PrinterType[1] == 1)
         {
-            printLogoP(printPortA,11);    
+            printLogoP(printPortA,logoPrint[1]);    
+        }else{
+            printLogoK(printPortB,logoPrint[1]);
         }
     }
     if(pos == side.b.dir || pos == side.d.dir)
     {
         if(PrinterType[1] == 1)
         {
-            printLogoP(printPortB,11);    
+            printLogoP(printPortB,logoPrint[1]);    
+        }else{
+            printLogoK(printPortB,logoPrint[1]);
         }
     }
     write_psoc1(val,10);
