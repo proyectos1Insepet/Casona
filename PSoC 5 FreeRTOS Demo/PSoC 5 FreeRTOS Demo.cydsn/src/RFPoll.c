@@ -1799,25 +1799,25 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                     if(PRF_rxBuffer[5] == side.a.dir)
                     {
                         for(x = 8; x < 12; x++){
-                            side.a.GradesHose[x-8] = PRF_rxBuffer[x];
+                            side.a.GradesHose[x - 8] = PRF_rxBuffer[x];
                         }
                     }
                     if(PRF_rxBuffer[5] == side.b.dir)
                     {
                         for(x = 8; x < 12; x++){
-                            side.b.GradesHose[x-8] = PRF_rxBuffer[x];
+                            side.b.GradesHose[x - 8] = PRF_rxBuffer[x];
                         }
                     }
                     if(PRF_rxBuffer[5] == side.c.dir)
                     {
                         for(x = 8; x < 12; x++){
-                            side.c.GradesHose[x-8] = PRF_rxBuffer[x];
+                            side.c.GradesHose[x - 8] = PRF_rxBuffer[x];
                         }
                     }
                     if(PRF_rxBuffer[5] == side.d.dir)
                     {
                         for(x = 8; x < 12; x++){
-                            side.d.GradesHose[x-8] = PRF_rxBuffer[x];
+                            side.d.GradesHose[x - 8] = PRF_rxBuffer[x];
                         }
                     }
                     lockTurn = PRF_rxBuffer[12];
@@ -2153,7 +2153,6 @@ void pollingRFA_Tx(){
         buffer_A[7]  = 0xE3;
         buffer_A[8]  = RF_WORKSHIFTREQ;
         
-
         for(x = bufferDisplay1.shiftId[0]; x >= 1; x--)
         {						   							
     		buffer_A[x + 8]= bufferDisplay1.shiftId[x];            
@@ -2166,7 +2165,6 @@ void pollingRFA_Tx(){
 
         buffer_A[33] = verificar_check(buffer_A, 34);
         
-
         side.a.RFstateReport = 0;
         ShiftState = 0;
         bufferAready = 1;
