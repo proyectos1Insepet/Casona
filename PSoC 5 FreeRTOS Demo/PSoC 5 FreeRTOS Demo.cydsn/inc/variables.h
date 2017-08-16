@@ -215,6 +215,10 @@
     uint32 CounterC;
     uint32 CounterD;
     uint8 logoPrint[2];
+    uint8 DeliveryStateA;
+    uint8 DeliveryStateB;
+    uint8 DeliveryStateC;
+    uint8 DeliveryStateD;
     
     
 /*

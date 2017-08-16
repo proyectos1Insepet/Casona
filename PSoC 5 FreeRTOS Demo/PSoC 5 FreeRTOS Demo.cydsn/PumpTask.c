@@ -6825,26 +6825,25 @@ void PumpAction(uint8 PositionPump, uint8 State)
         break;
         case PUMP_IDLE:
 
-            if(PositionPump == side.a.dir)
+            if(PositionPump == side.a.dir && DeliveryStateA != 1)
             {   
                 bufferDisplay1.flagActiveSale = false;
                 flowPos = 0;
                 side.a.rfState = RF_IDLE;                 
-            }
-                    
-            if(PositionPump == side.b.dir)
+            }                    
+            if(PositionPump == side.b.dir && DeliveryStateB != 1)
             {              			                
                 bufferDisplay2.flagActiveSale = false;
                 flowPosB = 0;
                 side.b.rfState = RF_IDLE;                 
             }
-            if(PositionPump == side.c.dir)
+            if(PositionPump == side.c.dir && DeliveryStateC != 1)
             {                               			                
                 bufferDisplay3.flagActiveSale = false;
                 flowPosC = 0;
                 side.c.rfState = RF_IDLE;                 
             }
-            if(PositionPump == side.d.dir)
+            if(PositionPump == side.d.dir && DeliveryStateD != 1)
             {                               			                
                 bufferDisplay4.flagActiveSale = false;
                 flowPosD = 0;
@@ -6867,6 +6866,7 @@ void PumpAction(uint8 PositionPump, uint8 State)
             {
                 bufferDisplay1.flagActiveSale = true;
                 bufferDisplay1.flagEndSale = false;
+                DeliveryStateA = 1;
                 if(side.a.BusyChange == 1)
                     side.a.rfState = RF_DELIVERING;              
             }
@@ -6874,6 +6874,7 @@ void PumpAction(uint8 PositionPump, uint8 State)
             {
                 bufferDisplay2.flagActiveSale = true;
                 bufferDisplay2.flagEndSale = false;
+                DeliveryStateB = 1;
                 if(side.b.BusyChange == 1)
                     side.b.rfState = RF_DELIVERING;               
             }
@@ -6881,6 +6882,7 @@ void PumpAction(uint8 PositionPump, uint8 State)
             {
                 bufferDisplay3.flagActiveSale = true;
                 bufferDisplay3.flagEndSale = false;
+                DeliveryStateC = 1;
                 if(side.c.BusyChange == 1)
                     side.c.rfState = RF_DELIVERING;               
             }
@@ -6888,6 +6890,7 @@ void PumpAction(uint8 PositionPump, uint8 State)
             {
                 bufferDisplay4.flagActiveSale = true;
                 bufferDisplay4.flagEndSale = false;
+                DeliveryStateD = 1;
                 if(side.d.BusyChange == 1)
                     side.d.rfState = RF_DELIVERING;                
             }      

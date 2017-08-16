@@ -392,6 +392,7 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                             RF_Connection_PutChar(buffer_A[x]);
                         }                       
                         bufferAready = 0;
+                        DeliveryStateA = 0;
                           
                     }
                     
@@ -456,6 +457,7 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                         }
                      
                         bufferAreadyB = 0;
+                        DeliveryStateB = 0;
                     }
                     
                     // Authorization Request
@@ -511,6 +513,7 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                             RF_Connection_PutChar(buffer_C[x]);
                         }                       
                         bufferAreadyC = 0;
+                        DeliveryStateC = 0;
                     }
                     
                     // Authorization Request
@@ -576,6 +579,7 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                             RF_Connection_PutChar(buffer_D[x]);
                         }                       
                         bufferAreadyD = 0;
+                        DeliveryStateD = 0;
                     }
                     
                     // Authorization Request
@@ -1814,25 +1818,41 @@ void pollingRF_Rx(uint8 PRF_rxBuffer[])
                     if(PRF_rxBuffer[5] == side.a.dir)
                     {
                         for(x = 8; x < 12; x++){
+<<<<<<< HEAD
                             side.a.GradesHose[x-7] = PRF_rxBuffer[x];
+=======
+                            side.a.GradesHose[x - 8] = PRF_rxBuffer[x];
+>>>>>>> refs/remotes/capantoja/master
                         }
                     }
                     if(PRF_rxBuffer[5] == side.b.dir)
                     {
                         for(x = 8; x < 12; x++){
+<<<<<<< HEAD
                             side.b.GradesHose[x-7] = PRF_rxBuffer[x];
+=======
+                            side.b.GradesHose[x - 8] = PRF_rxBuffer[x];
+>>>>>>> refs/remotes/capantoja/master
                         }
                     }
                     if(PRF_rxBuffer[5] == side.c.dir)
                     {
                         for(x = 8; x < 12; x++){
+<<<<<<< HEAD
                             side.c.GradesHose[x-7] = PRF_rxBuffer[x];
+=======
+                            side.c.GradesHose[x - 8] = PRF_rxBuffer[x];
+>>>>>>> refs/remotes/capantoja/master
                         }
                     }
                     if(PRF_rxBuffer[5] == side.d.dir)
                     {
                         for(x = 8; x < 12; x++){
+<<<<<<< HEAD
                             side.d.GradesHose[x-7] = PRF_rxBuffer[x];
+=======
+                            side.d.GradesHose[x - 8] = PRF_rxBuffer[x];
+>>>>>>> refs/remotes/capantoja/master
                         }
                     }
                     side.a.GradesHose[0] = 0x04;  //Recordar modificar donde aparezcan
@@ -2159,7 +2179,6 @@ void pollingRFA_Tx(){
         buffer_A[7]  = 0xE3;
         buffer_A[8]  = RF_WORKSHIFTREQ;
         
-
         for(x = bufferDisplay1.shiftId[0]; x >= 1; x--)
         {						   							
     		buffer_A[x + 8]= bufferDisplay1.shiftId[x];            
@@ -2172,7 +2191,6 @@ void pollingRFA_Tx(){
 
         buffer_A[33] = verificar_check(buffer_A, 34);
         
-
         side.a.RFstateReport = 0;
         ShiftState = 0;
         bufferAready = 1;
@@ -2186,6 +2204,7 @@ void pollingRFA_Tx(){
         {
             buffer_A[x] = 0x00;
         }
+        
         uint8 decimal,DecimalFaltante;
 		buffer_A[0]  = 0xBC;
         buffer_A[1]  = 0xCB;
