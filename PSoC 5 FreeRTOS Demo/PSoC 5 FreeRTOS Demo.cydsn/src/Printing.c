@@ -197,6 +197,12 @@ void printLogoK(uint8 val, uint8 logo){
         		write_psoc1(val,zeus[i]);			
 			}
 		break;
+        
+        case 15:
+			for(i=0;i<=755;i++){
+        		write_psoc1(val,trebol[i]);			
+			}
+		break;
 			
         case 255:
 			
@@ -318,6 +324,11 @@ void printLogoP(uint8 val, uint8 logo){
 		case 14:
 			for(i=0;i<=943;i++){
         		write_psoc1(val,zeus1[i]);			
+			}
+		break;
+        case 15:
+			for(i=0;i<=755;i++){
+        		write_psoc1(val,trebol1[i]);			
 			}
 		break;
             

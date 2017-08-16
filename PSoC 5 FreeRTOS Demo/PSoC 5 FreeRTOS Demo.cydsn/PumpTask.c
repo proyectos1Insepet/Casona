@@ -964,16 +964,16 @@ void PollingDisplay1(void){
                             SetPicture(1, DISPLAY_ESPERANDO_ID);                            
                         break; 
                         case 0xB7:  //ID Number
-//                            flowDisplay1 = 24;
-//                            numberKeys1 = 0;                            
-//                            bufferDisplay1.flagPrint =  1;
-//                            Tag_ClearRxBuffer();
-//                            Tag_ClearTxBuffer();
-//                            Tag_PutChar('O');
-//                            Tag_PutChar('K');
-//                            Tag_PutChar(0x01);
-//                            vTaskDelay( 100 / portTICK_PERIOD_MS );
-//                            SetPicture(1, DISPLAY_ESPERANDO_ID);                           
+                            flowDisplay1 = 24;
+                            numberKeys1 = 0;                            
+                            bufferDisplay1.flagPrint =  1;
+                            Tag_ClearRxBuffer();
+                            Tag_ClearTxBuffer();
+                            Tag_PutChar('O');
+                            Tag_PutChar('K');
+                            Tag_PutChar(0x01);
+                            vTaskDelay( 100 / portTICK_PERIOD_MS );
+                            SetPicture(1, DISPLAY_ESPERANDO_ID);                           
                         break;
                         case 0x94:  //Pantalla Inicial
                             bufferDisplay1.flagPrint =  0;
@@ -2382,16 +2382,16 @@ void PollingDisplay2(void){
                             SetPicture(2,DISPLAY_ESPERANDO_ID);                            
                         break; 
                         case 0xB7:  //ID por número
-//                            flowDisplay2 = 24;
-//                            numberKeys2 = 0;                            
-//                            bufferDisplay2.flagPrint =  1;
-//                            Tag_ClearRxBuffer();
-//                            Tag_ClearTxBuffer();
-//                            Tag_PutChar('O');
-//                            Tag_PutChar('K');
-//                            Tag_PutChar(0x02);
-//                            vTaskDelay( 100 / portTICK_PERIOD_MS );
-//                            SetPicture(2, DISPLAY_ESPERANDO_ID);                    
+                            flowDisplay2 = 24;
+                            numberKeys2 = 0;                            
+                            bufferDisplay2.flagPrint =  1;
+                            Tag_ClearRxBuffer();
+                            Tag_ClearTxBuffer();
+                            Tag_PutChar('O');
+                            Tag_PutChar('K');
+                            Tag_PutChar(0x02);
+                            vTaskDelay( 100 / portTICK_PERIOD_MS );
+                            SetPicture(2, DISPLAY_ESPERANDO_ID);                    
                         break;
                         case 0x94:  //Pantalla Inicial 
                             bufferDisplay2.flagPrint =  0;
@@ -3801,16 +3801,16 @@ void PollingDisplay3(void){
                             SetPicture(1, DISPLAY_ESPERANDO_ID);                            
                         break; 
                         case 0xB7:  //ID Number
-//                            flowDisplay3 = 24;
-//                            numberKeys3 = 0;                            
-//                            bufferDisplay3.flagPrint =  1;
-//                            Tag_ClearRxBuffer();
-//                            Tag_ClearTxBuffer();
-//                            Tag_PutChar('O');
-//                            Tag_PutChar('K');
-//                            Tag_PutChar(0x01);
-//                            vTaskDelay( 100 / portTICK_PERIOD_MS );
-//                            SetPicture(1, DISPLAY_ESPERANDO_ID);
+                            flowDisplay3 = 24;
+                            numberKeys3 = 0;                            
+                            bufferDisplay3.flagPrint =  1;
+                            Tag_ClearRxBuffer();
+                            Tag_ClearTxBuffer();
+                            Tag_PutChar('O');
+                            Tag_PutChar('K');
+                            Tag_PutChar(0x01);
+                            vTaskDelay( 100 / portTICK_PERIOD_MS );
+                            SetPicture(1, DISPLAY_ESPERANDO_ID);
                         break;
                         case 0x94:  //Pantalla Inicial
                             bufferDisplay3.flagPrint =  0;
@@ -5219,16 +5219,16 @@ void PollingDisplay4(void){
                             SetPicture(2,DISPLAY_ESPERANDO_ID);                            
                         break; 
                         case 0xB7:  //ID por número
-//                            flowDisplay4 = 23;
-//                            numberKeys4 = 0;                            
-//                            bufferDisplay4.flagPrint =  1;
-//                            Tag_ClearRxBuffer();
-//                            Tag_ClearTxBuffer();
-//                            Tag_PutChar('O');
-//                            Tag_PutChar('K');
-//                            Tag_PutChar(0x02);
-//                            vTaskDelay( 100 / portTICK_PERIOD_MS );
-//                            SetPicture(2, DISPLAY_ESPERANDO_ID);    
+                            flowDisplay4 = 23;
+                            numberKeys4 = 0;                            
+                            bufferDisplay4.flagPrint =  1;
+                            Tag_ClearRxBuffer();
+                            Tag_ClearTxBuffer();
+                            Tag_PutChar('O');
+                            Tag_PutChar('K');
+                            Tag_PutChar(0x02);
+                            vTaskDelay( 100 / portTICK_PERIOD_MS );
+                            SetPicture(2, DISPLAY_ESPERANDO_ID);    
                         break;
                         case 0x94:  //Pantalla Inicial 
                             bufferDisplay4.flagPrint =  0;
