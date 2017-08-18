@@ -48,13 +48,13 @@
 *********************************************************************************************************
 */
 
-uint8 title1[30]          = "     ESTACION DE SERVICIO     ";
-uint8 title2[30]          = "       TERPEL LA CASONA       ";
-uint8 title3[30]          = "         14.992.210-7         ";
-uint8 title4[30]          = "           4226353            ";
-uint8 title5[30]          = "             CALI             ";
-uint8 footer1[30]         = "       EDS CERTIFICADA        ";
-uint8 footer2[30]         = "    NO VALIDO COMO FACTURA    ";
+//uint8 title1[30]          = "     ESTACION DE SERVICIO     ";
+//uint8 title2[30]          = "       TERPEL LA CASONA       ";
+//uint8 title3[30]          = "         14.992.210-7         ";
+//uint8 title4[30]          = "           4226353            ";
+//uint8 title5[30]          = "             CALI             ";
+//uint8 footer1[30]         = "       EDS CERTIFICADA        ";
+//uint8 footer2[30]         = "    NO VALIDO COMO FACTURA    ";
 uint8 msn_fecha[13]       = "Fecha      : ";
 uint8 msn_hora[13]        = "Hora       : ";
 uint8 msn_placa[13]       = "Placa      : ";
@@ -525,6 +525,10 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
         		write_psoc1(val,side.a.ppuSale[x]);
         	}
         }else{
+            if (ppux10 ==1){
+                if(side.a.ppuSale[1]== 0x30)
+                    side.a.ppuSale[1]= 0x00;
+            }
             for(x = 1; x <= side.a.ppuSale[0]; x++)
             {						   							
         		write_psoc1(val,side.a.ppuSale[x]);
@@ -651,15 +655,22 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
                         bufferDisplay1.presetValue[0][1] = 0x00;
                     if(bufferDisplay1.presetValue[0][1] == 0x00 && bufferDisplay1.presetValue[0][2] == 0x30)
                         bufferDisplay1.presetValue[0][2] = 0x00;
-                    
+                    if(ppux10 ==1){
+                        if(bufferDisplay1.presetValue[0][1] == 0x00 && bufferDisplay1.presetValue[0][2] == 0x00 && bufferDisplay1.presetValue[0][3] == 0x30)
+                            bufferDisplay1.presetValue[0][3] = 0x00;
+                    }
                         ///////////////////////////////////////////////////////////////
                     for(x = bufferDisplay1.presetValue[0][0]; x >= 1 ;x--)
                     {						   							
                         write_psoc1(val,bufferDisplay1.presetValue[0][bufferDisplay1.presetValue[0][0]+ 1 - x]);
-                        if(x == VolDec + 1)
-                            write_psoc1(val,'.');
-                	}
-                    write_psoc1(val,bufferDisplay1.presetType[1]);
+                        if(ppux10 ==1){
+                            if(x == VolDec)
+                                write_psoc1(val,'.');
+                        }else{
+                            if(x == VolDec + 1)
+                                write_psoc1(val,'.');
+                        }
+                	}                    
                 }
                 else{
                     ///////////////////////////////////////////////////////////////
@@ -679,8 +690,7 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
                         if(x == VolDec+1)
                             write_psoc1(val,'.');
                 	}                    
-                }
-        	    write_psoc1(val,bufferDisplay1.presetType[1]);
+                }        	    
             }else
             {
                 if(bufferDisplay1.presetType[0] == 1)
@@ -884,6 +894,10 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
         		write_psoc1(val,side.b.ppuSale[x]);
         	}
         }else{
+            if (ppux10 ==1){
+                if(side.b.ppuSale[1]== 0x30)
+                    side.b.ppuSale[1]= 0x00;
+            }
             for(x = 1; x <= side.b.ppuSale[0]; x++)
             {						   							
         		write_psoc1(val,side.b.ppuSale[x]);
@@ -998,18 +1012,59 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
             {																		
     			write_psoc1(val,PRN_PRESET[x]);                          //Preset
     		} 
-    		if (digits < 7){
-        		for(x = 1; x <= bufferDisplay2.presetValue[0][0]; x++)
+    		if (digits < 7)
+            {
+                if(bufferDisplay2.presetType[0] == 1)
                 {
-        			write_psoc1(val,bufferDisplay2.presetValue[0][x]);	
-        		}
-            }
-            else{
+                    if(bufferDisplay2.presetValue[0][1] == 0x30)
+                        bufferDisplay2.presetValue[0][1] = 0x00;
+                    if(bufferDisplay2.presetValue[0][1] == 0x00 && bufferDisplay2.presetValue[0][2] == 0x30)
+                        bufferDisplay2.presetValue[0][2] = 0x00;
+                    if(ppux10 ==1){
+                        if(bufferDisplay2.presetValue[0][1] == 0x00 && bufferDisplay2.presetValue[0][2] == 0x00 && bufferDisplay2.presetValue[0][3] == 0x30)
+                            bufferDisplay2.presetValue[0][3] = 0x00;
+                    }
+                    
+                        ///////////////////////////////////////////////////////////////
+                    for(x = bufferDisplay2.presetValue[0][0]; x >= 1 ;x--)
+                    {						   							
+                        write_psoc1(val,bufferDisplay2.presetValue[0][bufferDisplay2.presetValue[0][0]+ 1 - x]);
+                        if(ppux10 ==1){
+                            if(x == VolDec)
+                                write_psoc1(val,'.');
+                        }else{
+                            if(x == VolDec + 1)
+                                write_psoc1(val,'.');
+                        }
+                	}                    
+                }
+                else{
+                    ///////////////////////////////////////////////////////////////
+                    for (x = 1; x < 5; x++ )
+                    {
+                        if (bufferDisplay2.presetValue[0][x] != 0x30)
+                            break;
+                        if (bufferDisplay2.presetValue[0][x] == 0x30)
+                        {
+                            bufferDisplay2.presetValue[0][x] = 0x00;                   
+                        }                
+                    }
+                    ///////////////////////////////////////////////////////////////
+                    for(x = bufferDisplay2.presetValue[0][0]; x >= 1 ;x--)
+                    {						   							
+                        write_psoc1(val,bufferDisplay2.presetValue[0][bufferDisplay2.presetValue[0][0]+ 1 - x]);
+                        if(x == VolDec+1)
+                            write_psoc1(val,'.');
+                	}                    
+                }        	    
+            }else
+            {
                 if(bufferDisplay2.presetType[0] == 1)
                 {
                     if(bufferDisplay2.presetValue[1][1] == 0x00)
                         bufferDisplay2.presetValue[1][1] = 0x30;
-
+                   // if(bufferDisplay1.presetValue[1][1] == 0x00 && bufferDisplay1.presetValue[1][2] == 0x30)
+                    //    bufferDisplay1.presetValue[1][2] = 0x00;
                     
                         ///////////////////////////////////////////////////////////////
                     for(x = bufferDisplay2.presetValue[1][0]; x >= 1 ;x--)
@@ -1019,16 +1074,14 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
                            // write_psoc1(val,'.');
                 	}
                 }
-                else{
-                    
-                    
+                else{                                        
                     ///////////////////////////////////////////////////////////////
                     for(x = bufferDisplay2.presetValue[1][0]; x >= 1 ;x--)
                     {						   							
                         write_psoc1(val, bufferDisplay2.presetValue[1][bufferDisplay2.presetValue[1][0]+ 1 - x]);
 
                 	}
-                } 
+                }                                        
             }
             write_psoc1(val,' ');
             write_psoc1(val,bufferDisplay2.presetType[1]);
@@ -1204,6 +1257,10 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
         		write_psoc1(val,side.c.ppuSale[x]);
         	}
         }else{
+            if (ppux10 ==1){
+                if(side.c.ppuSale[1]== 0x30)
+                    side.c.ppuSale[1]= 0x00;
+            }
             for(x = 1; x <= side.c.ppuSale[0]; x++)
             {						   							
         		write_psoc1(val,side.c.ppuSale[x]);
@@ -1320,37 +1377,76 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
             {																		
     			write_psoc1(val,PRN_PRESET[x]);                          //Preset
     		} 
-    		if(digits < 7)
+    		if (digits < 7)
             {
-                for(x = 1; x <= bufferDisplay3.presetValue[0][0]; x++)
+                if(bufferDisplay3.presetType[0] == 1)
                 {
-        			write_psoc1(val,bufferDisplay3.presetValue[0][x]);	
-        		}
-            }
-            else
+                    if(bufferDisplay3.presetValue[0][1] == 0x30)
+                        bufferDisplay3.presetValue[0][1] = 0x00;
+                    if(bufferDisplay3.presetValue[0][1] == 0x00 && bufferDisplay3.presetValue[0][2] == 0x30)
+                        bufferDisplay3.presetValue[0][2] = 0x00;
+                    if(ppux10 ==1){
+                        if(bufferDisplay3.presetValue[0][1] == 0x00 && bufferDisplay3.presetValue[0][2] == 0x00 && bufferDisplay3.presetValue[0][3] == 0x30)
+                            bufferDisplay3.presetValue[0][3] = 0x00;
+                    }
+                    
+                        ///////////////////////////////////////////////////////////////
+                    for(x = bufferDisplay3.presetValue[0][0]; x >= 1 ;x--)
+                    {						   							
+                        write_psoc1(val,bufferDisplay3.presetValue[0][bufferDisplay3.presetValue[0][0]+ 1 - x]);
+                        if(ppux10 ==1){
+                            if(x == VolDec)
+                                write_psoc1(val,'.');
+                        }else{
+                            if(x == VolDec + 1)
+                                write_psoc1(val,'.');
+                        }
+                	}                    
+                }
+                else{
+                    ///////////////////////////////////////////////////////////////
+                    for (x = 1; x < 5; x++ )
+                    {
+                        if (bufferDisplay3.presetValue[0][x] != 0x30)
+                            break;
+                        if (bufferDisplay3.presetValue[0][x] == 0x30)
+                        {
+                            bufferDisplay3.presetValue[0][x] = 0x00;                   
+                        }                
+                    }
+                    ///////////////////////////////////////////////////////////////
+                    for(x = bufferDisplay3.presetValue[0][0]; x >= 1 ;x--)
+                    {						   							
+                        write_psoc1(val,bufferDisplay3.presetValue[0][bufferDisplay3.presetValue[0][0]+ 1 - x]);
+                        if(x == VolDec+1)
+                            write_psoc1(val,'.');
+                	}                    
+                }        	    
+            }else
             {
                 if(bufferDisplay3.presetType[0] == 1)
                 {
                     if(bufferDisplay3.presetValue[1][1] == 0x00)
                         bufferDisplay3.presetValue[1][1] = 0x30;
+                   // if(bufferDisplay1.presetValue[1][1] == 0x00 && bufferDisplay1.presetValue[1][2] == 0x30)
+                    //    bufferDisplay1.presetValue[1][2] = 0x00;
                     
                         ///////////////////////////////////////////////////////////////
                     for(x = bufferDisplay3.presetValue[1][0]; x >= 1 ;x--)
                     {						   							
                         write_psoc1(val,bufferDisplay3.presetValue[1][bufferDisplay3.presetValue[1][0]+ 1 - x]);
-                     
+                        //if(x == VolDec + 1)
+                           // write_psoc1(val,'.');
                 	}
                 }
-                else{
-                    
-                    
+                else{                                        
                     ///////////////////////////////////////////////////////////////
                     for(x = bufferDisplay3.presetValue[1][0]; x >= 1 ;x--)
                     {						   							
                         write_psoc1(val, bufferDisplay3.presetValue[1][bufferDisplay3.presetValue[1][0]+ 1 - x]);
 
                 	}
-                } 
+                }                                        
             }
             write_psoc1(val,' ');
             write_psoc1(val,bufferDisplay3.presetType[1]);
@@ -1525,6 +1621,10 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
         		write_psoc1(val,side.d.ppuSale[x]);
         	}
         }else{
+            if (ppux10 ==1){
+                if(side.d.ppuSale[1]== 0x30)
+                    side.d.ppuSale[1]= 0x00;
+            }
             for(x = 1; x <= side.d.ppuSale[0]; x++)
             {						   							
         		write_psoc1(val,side.d.ppuSale[x]);
@@ -1640,35 +1740,75 @@ void imprimir(uint8 val, uint8 pos){ //val, puerto de impresora
             {																		
     			write_psoc1(val,PRN_PRESET[x]);                          //Preset
     		} 
-            if(digits < 7)
+            if (digits < 7)
             {
-        		for(x = 1; x <= bufferDisplay4.presetValue[0][0]; x++)
+                if(bufferDisplay4.presetType[0] == 1)
                 {
-        			write_psoc1(val,bufferDisplay4.presetValue[0][x]);	
-        		}
-            }
-            else
+                    if(bufferDisplay4.presetValue[0][1] == 0x30)
+                        bufferDisplay4.presetValue[0][1] = 0x00;
+                    if(bufferDisplay4.presetValue[0][1] == 0x00 && bufferDisplay4.presetValue[0][2] == 0x30)
+                        bufferDisplay4.presetValue[0][2] = 0x00;
+                    if(ppux10 ==1){
+                        if(bufferDisplay4.presetValue[0][1] == 0x00 && bufferDisplay4.presetValue[0][2] == 0x00 && bufferDisplay4.presetValue[0][3] == 0x30)
+                            bufferDisplay4.presetValue[0][3] = 0x00;
+                    }
+                        ///////////////////////////////////////////////////////////////
+                    for(x = bufferDisplay4.presetValue[0][0]; x >= 1 ;x--)
+                    {						   							
+                        write_psoc1(val,bufferDisplay4.presetValue[0][bufferDisplay4.presetValue[0][0]+ 1 - x]);
+                        if(ppux10 ==1){
+                            if(x == VolDec)
+                                write_psoc1(val,'.');
+                        }else{
+                            if(x == VolDec + 1)
+                                write_psoc1(val,'.');
+                        }
+                	}                    
+                }
+                else{
+                    ///////////////////////////////////////////////////////////////
+                    for (x = 1; x < 5; x++ )
+                    {
+                        if (bufferDisplay4.presetValue[0][x] != 0x30)
+                            break;
+                        if (bufferDisplay4.presetValue[0][x] == 0x30)
+                        {
+                            bufferDisplay4.presetValue[0][x] = 0x00;                   
+                        }                
+                    }
+                    ///////////////////////////////////////////////////////////////
+                    for(x = bufferDisplay4.presetValue[0][0]; x >= 1 ;x--)
+                    {						   							
+                        write_psoc1(val,bufferDisplay4.presetValue[0][bufferDisplay4.presetValue[0][0]+ 1 - x]);
+                        if(x == VolDec+1)
+                            write_psoc1(val,'.');
+                	}                    
+                }        	    
+            }else
             {
                 if(bufferDisplay4.presetType[0] == 1)
                 {
                     if(bufferDisplay4.presetValue[1][1] == 0x00)
                         bufferDisplay4.presetValue[1][1] = 0x30;
+                   // if(bufferDisplay1.presetValue[1][1] == 0x00 && bufferDisplay1.presetValue[1][2] == 0x30)
+                    //    bufferDisplay1.presetValue[1][2] = 0x00;
                     
                         ///////////////////////////////////////////////////////////////
                     for(x = bufferDisplay4.presetValue[1][0]; x >= 1 ;x--)
                     {						   							
                         write_psoc1(val,bufferDisplay4.presetValue[1][bufferDisplay4.presetValue[1][0]+ 1 - x]);
-
+                        //if(x == VolDec + 1)
+                           // write_psoc1(val,'.');
                 	}
                 }
-                else{
-
+                else{                                        
+                    ///////////////////////////////////////////////////////////////
                     for(x = bufferDisplay4.presetValue[1][0]; x >= 1 ;x--)
                     {						   							
                         write_psoc1(val, bufferDisplay4.presetValue[1][bufferDisplay4.presetValue[1][0]+ 1 - x]);
 
                 	}
-                } 
+                }                                        
             }
             write_psoc1(val,' ');
             write_psoc1(val,bufferDisplay4.presetType[1]);

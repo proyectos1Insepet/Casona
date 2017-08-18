@@ -650,9 +650,8 @@ uint8 priceChange(uint8 pos,uint8 handle,uint8 *value){
 				buffer[6 + x]=(0xE0 | (value[x] & 0x0F));
 			}
 		}else{
-            for(x = 0; x < 3; x++)
-            {
-				buffer[6 + x] = (0xE0 | (value[x] & 0x0F));
+            for(x = 0; x < 4; x++){
+				buffer[6 + x]=(0xE0 | (value[x+1]&0x0F));  //Verificar ppux10
 			}	
 		}
 		buffer[10] = 0xFB;
@@ -1314,7 +1313,7 @@ uint8 PumpCompleteConfiguration(uint8 side){
     
     // Obtiene el estado del sutidor 
     state = get_state(side);
-    
+    ppux10 = 0;
     //Envia comando 2X y espera respuesta DX
     if(state == 0x06)
     {
@@ -1394,7 +1393,8 @@ uint8 PumpCompleteConfiguration(uint8 side){
     }
     PPUDec              = (buffer [18] & 0x0F) - 1;
     DDMode              =  buffer [20] & 0x0F;
-    
+    if(MoneyDec == 0x03 && PPUDec == 0x02)
+        ppux10 = 1;
     return 0;
 } 
 
