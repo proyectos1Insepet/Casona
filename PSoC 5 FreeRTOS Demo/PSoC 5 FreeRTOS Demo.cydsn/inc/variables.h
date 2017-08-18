@@ -272,6 +272,7 @@ struct buffer{
     uint8 zeroSend;
     uint8 PresetTemp[10];
     uint8 PrintCopy;
+    uint8 passCard[5];
 
 };
 

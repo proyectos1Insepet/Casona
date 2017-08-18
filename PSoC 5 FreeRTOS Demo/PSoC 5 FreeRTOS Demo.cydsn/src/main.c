@@ -84,7 +84,8 @@ void loadConfiguration(){
     DDMode     = EEPROM_1_ReadByte(5);  //Punto decimal 
     digits     = EEPROM_1_ReadByte(6);  //Digitos
     lockTurn   = EEPROM_1_ReadByte(7);  
-    //lockTurn   = 1;                   //Fijo turno abierto para pruebas
+    //lockTurn   = 1; 
+
     printPortA = EEPROM_1_ReadByte(8);  //Puertos de impresion
     printPortB = EEPROM_1_ReadByte(9);  //Puertos de impresion
     IDCast[0]  = EEPROM_1_ReadByte(10); //ID Estacion1
@@ -99,6 +100,7 @@ void loadConfiguration(){
 	for(x=0;x<=buffer_i2c[0];x++){
 		logoPrint[x]=buffer_i2c[x];
 	}
+    logoPrint[1] = 11; //Fijo para pruebas
     LeerEeprom(2,2);
 	for(x=0;x<=buffer_i2c[0];x++){
 		PrinterType[x]=buffer_i2c[x];

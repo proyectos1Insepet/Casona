@@ -964,16 +964,23 @@ void PollingDisplay1(void){
                             SetPicture(1, DISPLAY_ESPERANDO_ID);                            
                         break; 
                         case 0xB7:  //ID Number
-                            flowDisplay1 = 24;
-                            numberKeys1 = 0;                            
-                            bufferDisplay1.flagPrint =  1;
-                            Tag_ClearRxBuffer();
-                            Tag_ClearTxBuffer();
-                            Tag_PutChar('O');
-                            Tag_PutChar('K');
-                            Tag_PutChar(0x01);
-                            vTaskDelay( 100 / portTICK_PERIOD_MS );
-                            SetPicture(1, DISPLAY_ESPERANDO_ID);                           
+                            if(logoPrint[1]!= 11){
+                            	flowDisplay1 = 24;
+                            	numberKeys1 = 0;                            
+                            	bufferDisplay1.flagPrint =  1;
+                            	Tag_ClearRxBuffer();
+                            	Tag_ClearTxBuffer();
+                            	Tag_PutChar('O');
+                            	Tag_PutChar('K');
+                            	Tag_PutChar(0x01);
+                            	vTaskDelay( 100 / portTICK_PERIOD_MS );
+                            	SetPicture(1, DISPLAY_ESPERANDO_ID);                           
+                            }else{
+                            	flowDisplay1 = 25;
+                                numberKeys1 = 0;
+                            	vTaskDelay( 100 / portTICK_PERIOD_MS );
+                            	SetPicture(1, DISPLAY_ESPERANDO_ID);
+                            }                           
                         break;
                         case 0x94:  //Pantalla Inicial
                             bufferDisplay1.flagPrint =  0;
@@ -1157,6 +1164,109 @@ void PollingDisplay1(void){
                 Display1_ClearRxBuffer();
             } 
         break;
+            
+        case 25:
+            for(x = 0; x < 30; x++)
+            {
+                temporal[x] = 0x00;
+            }
+            for(x = 0; x < 25; x++)
+            {
+                bufferDisplay1.idSerial[x] = 0x00;
+            }
+            if(touch_present(1) == 1)
+            {
+				if(touch_write(1,0x33))
+                {
+					for(x = 1; x <= 8; x++)
+                    {
+						temporal[x] = touch_read_byte(1);  // Id
+					}
+					y = 0;
+					for(x = 1; x < 8; x++)
+                    {
+                        y = crc_check(y,temporal[x]);      // Checksum
+                    }
+					
+                    if(y == temporal[8])
+                    {
+						bufferDisplay1.idSerial[0] = 16;
+						y = 16;
+						
+                        for(x = 1; x <= 8; x++)
+                        {
+							if((temporal[x] & 0x0F) >= 10)
+                            {
+								bufferDisplay1.idSerial[y] = (temporal[x] & 0x0F) + 55;
+							}else{
+								bufferDisplay1.idSerial[y] = (temporal[x] & 0x0F) + 48;				
+							}
+                            y--;
+							if(((temporal[x] >> 4) & 0x0F) >= 10)
+                            {
+								bufferDisplay1.idSerial[y] = ((temporal[x] >> 4) & 0x0F) + 55;
+							}else{
+								bufferDisplay1.idSerial[y] = ((temporal[x] >> 4) & 0x0F) + 48;				
+							}
+                            y--;
+						}
+                        
+                        // Authorization request
+                        SetPicture(1,DISPLAY_ID_RECONOCIDO);                                                                 
+                        vTaskDelay( 500 / portTICK_PERIOD_MS );                       
+                        iButtonFlag = 1;
+                        flowDisplay1 = 14;
+                        bufferDisplay1.flagKeyboard = 4;
+                        numberKeys1 = 0;
+                        hiddenKeys = 5;
+                        controlChar ='*';
+                        SetPicture(1,DISPLAY_INGRESE_PASSWORD);  
+                        Display1_ClearRxBuffer();                                                                        
+					}
+				}else
+                    {   // iButton Error
+                        SetPicture(1,DISPLAY_ID_NO_RECONOCIDO);                                           
+                        Display1_ClearRxBuffer();
+                        vTaskDelay( 700 / portTICK_PERIOD_MS );    
+                        SetPicture(1, DISPLAY_INICIO0);
+                        flowDisplay1 = 0;
+                        bufferDisplay1.flagPrint =  0;
+                        PresetFlag = 0;
+                        iButtonFlag = 0;
+                        AuthType = 0;                        
+                    }
+			}                     
+            //Touch for return to init display
+            if(Display1_GetRxBufferSize() == 8)
+            {
+                if((Display1_rxBuffer[0] == 0xAA) && (Display1_rxBuffer[6] == 0xC3) && (Display1_rxBuffer[7] == 0x3C))
+                {
+                    switch(Display1_rxBuffer[3])
+                    {                        
+                        case 0x7E:  //Init Screen                                                        
+                            SetPicture(1, DISPLAY_INICIO0);
+                            flowDisplay1 = 0;
+                            bufferDisplay1.flagPrint =  0;
+                            PresetFlag = 0;
+                            iButtonFlag = 0;
+                            AuthType = 0;
+                            Display1_ClearRxBuffer();
+                        break;
+                        
+                        case 0x94:  //Cancel Button                                                        
+                            SetPicture(1, DISPLAY_INICIO0);
+                            flowDisplay1 = 0;
+                            bufferDisplay1.flagPrint =  0;
+                            PresetFlag = 0;
+                            iButtonFlag = 0;
+                            AuthType = 0;
+                            Display1_ClearRxBuffer();
+                        break;
+                    }                    
+                }                
+                Display1_ClearRxBuffer();
+            } 
+        break;
     ///////////////FIN CASOS PARA CRÉDITO  /////////////////////  
     
     //////////// CASOS PARA CONFIGURACIONES  ///////////////////
@@ -1289,6 +1399,14 @@ void PollingDisplay1(void){
                             flowDisplay1 = 0;
                             SetPicture(1,DISPLAY_INICIO0);
                         break;
+                        case 4://Pass turno
+                            for(x = 0; x < hiddenKeys; x++)
+                            {
+                                bufferDisplay1.passCard[x] = 0;
+                            }
+                            flowDisplay1 = 0;
+                            SetPicture(1,DISPLAY_INICIO0);
+                        break;
                         case 5://Pass
                             for(x = 0; x < hiddenKeys; x++)
                             {
@@ -1353,6 +1471,16 @@ void PollingDisplay1(void){
                             flowDisplay1 = 15;
                             SetPicture(1,DISPLAY_CONFIGURACIONES);
                         break; 
+                        case 4://Pass Card
+                            for(x = 0; x < hiddenKeys; x++)
+                            {
+                                bufferDisplay1.passCard[x] = bufferDisplay1.valueKeys[x];
+                            }
+                            vTaskDelay( 500 / portTICK_PERIOD_MS );                       
+                            iButtonFlag = 1;
+                            SetPicture(1, DISPLAY_FORMA_PROGRAMACION);
+                            flowDisplay1 = 3;
+                        break;
                         case 6://Pass
                             for(x = 1; x <= configAccess[0]; x++)
                             {
