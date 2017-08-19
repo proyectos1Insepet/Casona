@@ -77,22 +77,10 @@ void StoreConfiguration(){
 void loadConfiguration(){
   
     uint16 x;
-    
-    MoneyDec   = EEPROM_1_ReadByte(2);  //Punto decimal dinero
-    VolDec     = EEPROM_1_ReadByte(3);  //Punto decimal volumen
-    PPUDec     = EEPROM_1_ReadByte(4);  //Punto decimal PPU
-    DDMode     = EEPROM_1_ReadByte(5);  //Punto decimal 
-    digits     = EEPROM_1_ReadByte(6);  //Digitos
-    lockTurn   = EEPROM_1_ReadByte(7);  
-    //lockTurn   = 1;                   //Fijo turno abierto para pruebas
-    printPortA = EEPROM_1_ReadByte(8);  //Puertos de impresion
-    printPortB = EEPROM_1_ReadByte(9);  //Puertos de impresion
-    IDCast[0]  = EEPROM_1_ReadByte(10); //ID Estacion1
-    IDCast[1]  = EEPROM_1_ReadByte(11); //ID Estacion2    
-    
+              
     configAccess[0] = 0x04; 
 
-    PrinterType[1] = 1; // Tipo de impresora
+    //PrinterType[1] = 1; // Tipo de impresora
     
     /// Leer desde eeprom externa ///
     LeerEeprom(0,2);
@@ -189,6 +177,17 @@ void loadConfiguration(){
     side.b.dir = EEPROM_1_ReadByte(13); //Segunda posicion
     side.c.dir = EEPROM_1_ReadByte(14); //Tercera posicion
     side.d.dir = EEPROM_1_ReadByte(15); //Cuarta posicion
+    MoneyDec   = EEPROM_1_ReadByte(2);  //Punto decimal dinero
+    VolDec     = EEPROM_1_ReadByte(3);  //Punto decimal volumen
+    PPUDec     = EEPROM_1_ReadByte(4);  //Punto decimal PPU
+    DDMode     = EEPROM_1_ReadByte(5);  //Punto decimal 
+    digits     = EEPROM_1_ReadByte(6);  //Digitos
+    lockTurn   = EEPROM_1_ReadByte(7);  
+    //lockTurn   = 1;                   //Fijo turno abierto para pruebas
+    printPortA = EEPROM_1_ReadByte(8);  //Puertos de impresion
+    printPortB = EEPROM_1_ReadByte(9);  //Puertos de impresion
+    IDCast[0]  = EEPROM_1_ReadByte(10); //ID Estacion1
+    IDCast[1]  = EEPROM_1_ReadByte(11); //ID Estacion2  
 }
 
 /* 
