@@ -219,6 +219,8 @@
     uint8 DeliveryStateB;
     uint8 DeliveryStateC;
     uint8 DeliveryStateD;
+    uint8 buffer_RX[500];
+    uint8 buffer_TX[25];
     
     
 /*
@@ -272,7 +274,7 @@ struct buffer{
     uint8 zeroSend;
     uint8 PresetTemp[10];
     uint8 PrintCopy;
-    uint8 passCard[5];
+    uint8 passCard[8];
 
 };
 

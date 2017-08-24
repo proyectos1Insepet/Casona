@@ -21,6 +21,7 @@
 #include <protocol.h>
 #include <variables.h>
 #include <codetag.h>
+#include <code_pirata.h>
 #include <keyboard.h>
 #include <ibutton.h>
 #include <RFPoll.h>
@@ -467,7 +468,7 @@ void PollingDisplay1(void){
                             Display1_ClearRxBuffer();
                         break;
                         case 0x43:     //Preset full 
-                            bufferDisplay1.presetType[0] = 3;
+                            bufferDisplay1.presetType[0] = 2;
                             bufferDisplay1.presetType[1] = 'F';
                             
                             for(x = 1; x <(digits - 1); x++)
@@ -1174,67 +1175,26 @@ void PollingDisplay1(void){
             {
                 bufferDisplay1.idSerial[x] = 0x00;
             }
-            if(touch_present(1) == 1)
-            {
-				if(touch_write(1,0x33))
-                {
-					for(x = 1; x <= 8; x++)
-                    {
-						temporal[x] = touch_read_byte(1);  // Id
-					}
-					y = 0;
-					for(x = 1; x < 8; x++)
-                    {
-                        y = crc_check(y,temporal[x]);      // Checksum
-                    }
-					
-                    if(y == temporal[8])
-                    {
-						bufferDisplay1.idSerial[0] = 16;
-						y = 16;
-						
-                        for(x = 1; x <= 8; x++)
-                        {
-							if((temporal[x] & 0x0F) >= 10)
-                            {
-								bufferDisplay1.idSerial[y] = (temporal[x] & 0x0F) + 55;
-							}else{
-								bufferDisplay1.idSerial[y] = (temporal[x] & 0x0F) + 48;				
-							}
-                            y--;
-							if(((temporal[x] >> 4) & 0x0F) >= 10)
-                            {
-								bufferDisplay1.idSerial[y] = ((temporal[x] >> 4) & 0x0F) + 55;
-							}else{
-								bufferDisplay1.idSerial[y] = ((temporal[x] >> 4) & 0x0F) + 48;				
-							}
-                            y--;
-						}
-                        
-                        // Authorization request
-                        SetPicture(1,DISPLAY_ID_RECONOCIDO);                                                                 
-                        vTaskDelay( 500 / portTICK_PERIOD_MS );                       
-                        iButtonFlag = 1;
-                        flowDisplay1 = 14;
-                        bufferDisplay1.flagKeyboard = 4;
-                        numberKeys1 = 0;
-                        hiddenKeys = 5;
-                        controlChar ='*';
-                        SetPicture(1,DISPLAY_INGRESE_PASSWORD);  
-                        Display1_ClearRxBuffer();                                                                        
-					}
-				}else
-                    {   // iButton Error
-                        SetPicture(1,DISPLAY_ID_NO_RECONOCIDO);                                           
-                        Display1_ClearRxBuffer();
-                        vTaskDelay( 700 / portTICK_PERIOD_MS );    
-                        SetPicture(1, DISPLAY_INICIO0);
-                        flowDisplay1 = 0;
-                        bufferDisplay1.flagPrint =  0;
-                        PresetFlag = 0;
-                        iButtonFlag = 0;
-                        AuthType = 0;                        
-                    }
+            if(code_pirata('A','5') == 1)
+            {	
+                for (x = 3; x < 24; x++ ){
+                    if(temporal[x] == 0x3F)
+                        break;
+				    bufferDisplay1.idSerial[x-2] = temporal[x];                    
+                }
+                bufferDisplay1.idSerial[0] = x-3;
+                // Authorization request
+                SetPicture(1,DISPLAY_ID_RECONOCIDO);                                                                 
+                vTaskDelay( 500 / portTICK_PERIOD_MS );                       
+                iButtonFlag = 1;
+                flowDisplay1 = 14;
+                bufferDisplay1.flagKeyboard = 4;
+                numberKeys1 = 0;
+                hiddenKeys = 5;
+                controlChar ='*';
+                SetPicture(1,DISPLAY_INGRESE_PASSWORD);  
+                Display1_ClearRxBuffer();                                                                        
+									                                       
 			}                     
             //Touch for return to init display
             if(Display1_GetRxBufferSize() == 8)
@@ -1463,6 +1423,16 @@ void PollingDisplay1(void){
                             side.a.RFstateReport = 1;
                             ShiftState = 1;
                         break;
+                        case 4://Pass Card
+                            for(x = 0; x < hiddenKeys; x++)
+                            {
+                                bufferDisplay1.passCard[x] = bufferDisplay1.valueKeys[x];
+                            }
+                            vTaskDelay( 500 / portTICK_PERIOD_MS );                       
+                            iButtonFlag = 2;
+                            SetPicture(1, DISPLAY_FORMA_PROGRAMACION);
+                            flowDisplay1 = 3;
+                        break;
                         case 5://Pass
                             for(x = 0; x < hiddenKeys; x++)
                             {
@@ -1470,17 +1440,7 @@ void PollingDisplay1(void){
                             }
                             flowDisplay1 = 15;
                             SetPicture(1,DISPLAY_CONFIGURACIONES);
-                        break; 
-                        case 4://Pass Card
-                            for(x = 0; x < hiddenKeys; x++)
-                            {
-                                bufferDisplay1.passCard[x] = bufferDisplay1.valueKeys[x];
-                            }
-                            vTaskDelay( 500 / portTICK_PERIOD_MS );                       
-                            iButtonFlag = 1;
-                            SetPicture(1, DISPLAY_FORMA_PROGRAMACION);
-                            flowDisplay1 = 3;
-                        break;
+                        break;                         
                         case 6://Pass
                             for(x = 1; x <= configAccess[0]; x++)
                             {
@@ -6393,8 +6353,15 @@ void PresetAuthorize(uint8 Position)
             CreditAuth = RF_CREDITSALEAUTH;
             side.a.RFstateReport = 1;
             iButtonFlag = 0;
-            side.a.rfState = RF_IDLE;
-            
+            //side.a.rfState = RF_IDLE;            
+        }
+        //Habilita consulta de credito con el servidor Terpel
+        if(iButtonFlag == 2 && side.a.activeHose == side.a.hose) 
+        {
+            CreditAuth = RF_CREDITSALEAUTH;
+            side.a.RFstateReport = 2;
+            iButtonFlag = 0;
+            //side.a.rfState = RF_IDLE;            
         }
         
         //iButton Autorizado
