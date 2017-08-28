@@ -305,15 +305,23 @@ void PollingDisplay1(void){
                 if((Display1_rxBuffer[0] == 0xAA) && (Display1_rxBuffer[6] == 0xC3) && (Display1_rxBuffer[7] == 0x3C))
                 {     
                     if(NumPositions == 2){
-                        flowDisplay1 = 2;                               //Pantalla forma de pago                      
-                        SetPicture(1, DISPLAY_FORMA_PAGO_DESEADA);                                                
+                        flowDisplay1 = 2;                               //Pantalla forma de pago  
+                        if(logoPrint[1]!= 11){
+                            SetPicture(1, DISPLAY_FORMA_PAGO_DESEADA);                                                
+                        }else{
+                            SetPicture(1,DISPLAY_FORMA_PAGO_DESEADA_TERPEL);
+                        }
                     }else{
                         switch(Display1_rxBuffer[3]){
 				        case 0x56:						         //POS A                                                                                                                       
                                 if(bufferDisplay1.flagActiveSale){
                                     flowDisplay1 = flowPos;      //Si está vendiendo en esta posición regresa a su flujo
                                 }else{
-                                    SetPicture(1, DISPLAY_FORMA_PAGO_DESEADA); //Pantalla forma de pago
+                                    if(logoPrint[1]!= 11){
+                                        SetPicture(1, DISPLAY_FORMA_PAGO_DESEADA);                                                
+                                    }else{
+                                        SetPicture(1,DISPLAY_FORMA_PAGO_DESEADA_TERPEL);
+                                    }
                                     selectPos     = 1;
                                     flowDisplay1  = 2;
                                 }
@@ -337,7 +345,11 @@ void PollingDisplay1(void){
                                 if (bufferDisplay3.flagActiveSale){                                    
                                     flowDisplay3 = flowPosC;    //Si la venta está activa en POS B regresa a su flujo
                                 }else{
-                                    SetPicture(1, DISPLAY_FORMA_PAGO_DESEADA); //Pantalla forma de pago
+                                    if(logoPrint[1]!= 11){
+                                        SetPicture(1, DISPLAY_FORMA_PAGO_DESEADA);                                                
+                                    }else{
+                                        SetPicture(1,DISPLAY_FORMA_PAGO_DESEADA_TERPEL);
+                                    }
 							        selectPos     = 2;
                                     flowDisplay3  = 2;                            
                                 }                           
@@ -379,8 +391,12 @@ void PollingDisplay1(void){
                             if(lockTurn == 1)
                             {
                                 flowDisplay1 = 10;
-                                bufferDisplay1.saleType = 2;                                
-                                SetPicture(1, DISPLAY_ID_DIGITAL);
+                                bufferDisplay1.saleType = 2;
+                                if(logoPrint[1]!= 11){
+                                    SetPicture(1, DISPLAY_ID_DIGITAL);
+                                }else{
+                                    SetPicture(1, DISPLAY_ID_TERPEL);
+                                }
                                 AuthType = 1;
                                 Display1_ClearRxBuffer();
                             }else

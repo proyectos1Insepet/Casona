@@ -348,6 +348,7 @@ enum _AVAILABLE_DISPLAYS_
     DISPLAY_INICIO2,
 
     DISPLAY_FORMA_PAGO_DESEADA              = 0x04,
+    DISPLAY_FORMA_PAGO_DESEADA_TERPEL       = 0x8D,
     DISPLAY_FORMA_PROGRAMACION              = 0x05,
     DISPLAY_INTRODUZCA_VALOR                = 0x06,
     DISPLAY_INTRODUZCA_VALOR2               = 0x0F,
@@ -369,6 +370,7 @@ enum _AVAILABLE_DISPLAYS_
     DISPLAY_GRACIAS_VUELVA_PRONTO           = 0x0C,
 
     DISPLAY_ID_DIGITAL                      = 0x85,
+    DISPLAY_ID_TERPEL                       = 0x8B,
     DISPLAY_ID_NO_RECONOCIDO                = 0x1C,//0x11,
     DISPLAY_ESPERANDO_ID                    = 0x12,
     DISPLAY_ID_RECONOCIDO                   = 0x13,
@@ -392,7 +394,7 @@ enum _AVAILABLE_DISPLAYS_
     DISPLAY_HORA                            = 0x3F,
     DISPLAY_FECHA                           = 0x40,
     
-    DISPLAY_OPCION_TURNO                    = 0x8D,
+    //DISPLAY_OPCION_TURNO                    = 0x8D,
     DISPLAY_ABRIR_TURNO                     = 0x23,
     DISPLAY_CERRAR_TURNO                    = 0x2A,
     DISPLAY_CANCELADO_X_PC                  = 0x2B,
